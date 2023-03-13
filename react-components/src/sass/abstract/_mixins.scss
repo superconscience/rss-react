@@ -1,0 +1,33 @@
+@import 'variables';
+
+@mixin media-lg-up {
+  @media (min-width: $width-lg) { @content; }
+}
+
+@mixin media-lg-down {
+  @media (max-width: ($width-lg - 1px)) { @content; }
+}
+
+@mixin media-md-up {
+  @media (min-width: $width-md) { @content; }
+}
+
+@mixin media-md-down {
+  @media (max-width: ($width-md - 1px)) { @content; }
+}
+
+@mixin media-sm-up {
+  @media (min-width: $width-sm) { @content; }
+}
+
+@mixin media-sm-down {
+  @media (max-width: ($width-sm - 1px)) { @content; }
+}
+
+@mixin media-xs-up {
+  @media (min-width: $width-xs) { @content; }
+}
+
+@mixin media-xs-down {
+  @media (max-width: ($width-xs - 1px)) { @content; }
+}
