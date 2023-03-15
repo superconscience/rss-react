@@ -3,8 +3,13 @@ import { Layout } from './components/layout/layout';
 import { About } from './pages/about/about';
 import { Home } from './pages/home/home';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { NotFound } from './pages/not-found/not-found';
 
 const router = createBrowserRouter([
+  {
+    path: '*',
+    element: <NotFound />,
+  },
   {
     path: '/',
     element: <Layout />,
