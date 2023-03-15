@@ -16,17 +16,18 @@ export class Layout extends Component {
   render() {
     return (
       <>
-        <nav>
+        <header className={styles.header}>
           <Container>
-            <NavLink to="/" className={this.className}>
-              Home
-            </NavLink>
-            &nbsp;|&nbsp;
-            <NavLink to="/about" className={this.className}>
-              About
-            </NavLink>
+            <nav>
+              <NavLink to="/" className={this.className}>
+                Home
+              </NavLink>
+              <NavLink to="/about" className={this.className}>
+                About Us
+              </NavLink>
+            </nav>
           </Container>
-        </nav>
+        </header>
         <main className="main">
           <Outlet />
         </main>

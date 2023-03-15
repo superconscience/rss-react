@@ -1,5 +1,21 @@
+.header {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  background-color: #2c2e2e;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
 .nav__link {
+  &:not(:last-child) {
+    margin-right: 1.5rem;
+  }
   &_active {
-    color: red;
+    color: #f02525;
+  }
+  &:hover {
+    opacity: 0.8;
   }
 }
