@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { NavLink, NavLinkProps, Outlet } from 'react-router-dom';
 import styles from './layout.module.scss';
 import cn from 'classnames';
+import { Container } from '../ui/container/container';
 
 export class Layout extends Component {
   static readonly classNames = {
@@ -16,13 +17,15 @@ export class Layout extends Component {
     return (
       <>
         <nav>
-          <NavLink to="/" className={this.className}>
-            Home
-          </NavLink>
-          &nbsp;|&nbsp;
-          <NavLink to="/about" className={this.className}>
-            About
-          </NavLink>
+          <Container>
+            <NavLink to="/" className={this.className}>
+              Home
+            </NavLink>
+            &nbsp;|&nbsp;
+            <NavLink to="/about" className={this.className}>
+              About
+            </NavLink>
+          </Container>
         </nav>
         <main className="main">
           <Outlet />

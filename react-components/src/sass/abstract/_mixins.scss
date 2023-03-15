@@ -56,3 +56,31 @@
   text-overflow: ellipsis;
   white-space: normal;
 }
+
+@mixin make-container($padding-x: $container-padding-x) {
+  width: 100%;
+  padding-right: $padding-x;
+  padding-left: $padding-x;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@mixin min($bp, $max: "null", $device: "screen") {
+  @if $max == "null" {
+    @media only #{$device} and (min-width: #{$bp}) {
+      @content;
+    }
+  } @else {
+    @media only #{$device} and (min-width: #{$bp}) and (max-width: #{$max}) {
+      @content;
+    }
+  }
+}
+
+@function bp($bp) {
+  @return map-get($breakpoints, $bp);
+}
+
+@function container($container-size, $true-val: false) {
+  @return map-get($container-sizes, $container-size);
+}

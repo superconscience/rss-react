@@ -2,3 +2,29 @@ $width-lg: 1200px;
 $width-md: 768px;
 $width-sm: 600px;
 $width-xs: 390px;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+);
+
+$container-padding-x: 10px;
+
+$breakpoints: (
+  na: 0px,
+  xs: 390px,
+  sm: 600px,
+  md: 900px,
+  lg: 1200px,
+  xl: 1800px,
+);
+
+$container-sizes: (
+  sm: map-get($breakpoints, sm) - 30px,
+  md: map-get($breakpoints, md) - 40px,
+  lg: map-get($breakpoints, lg) - 50px,
+  xl: map-get($breakpoints, xl) - 400px
+);
