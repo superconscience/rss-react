@@ -8,6 +8,12 @@
   color: #ffffff;
 }
 
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .nav__link {
   &:not(:last-child) {
     margin-right: 1.5rem;

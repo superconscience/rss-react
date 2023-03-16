@@ -5,13 +5,24 @@ import { ErrorBoundary } from './components/error-boundary/error-boundary';
 import { Home } from './pages/home/home';
 import { About } from './pages/about/about';
 
+export const pages = {
+  home: {
+    path: '/',
+    title: 'Home',
+  },
+  about: {
+    path: '/about',
+    title: 'About us',
+  },
+} as const;
+
 const routes: RouteObject[] = [
   {
     path: '*',
     element: <NotFound />,
   },
   {
-    path: '/',
+    path: '',
     element: <Layout />,
     errorElement: <ErrorBoundary />,
     children: [
@@ -20,11 +31,11 @@ const routes: RouteObject[] = [
         element: <Outlet />,
         children: [
           {
-            path: '',
+            path: pages.home.path,
             element: <Home />,
           },
           {
-            path: '/about',
+            path: pages.about.path,
             element: <About />,
           },
         ],
