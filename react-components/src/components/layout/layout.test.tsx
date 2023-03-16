@@ -5,13 +5,13 @@ import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 describe('Layout', async () => {
-  it('renders layout', async () => {
-    const { findByText } = render(<Layout />, { wrapper: BrowserRouter });
+  it('renders header and main elements', async () => {
+    const { getByTestId } = render(<Layout />, { wrapper: BrowserRouter });
 
-    const aboutLink = await findByText(/about us/i);
-    const homeLink = await findByText(/home/i);
+    const header = getByTestId('header');
+    const main = getByTestId('main');
 
-    expect(aboutLink).toBeInTheDocument();
-    expect(homeLink).toBeInTheDocument();
+    expect(header).toBeInTheDocument();
+    expect(main).toBeInTheDocument();
   });
 });

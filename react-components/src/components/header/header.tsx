@@ -15,7 +15,7 @@ export class Header extends Component {
 
   render() {
     return (
-      <header className={styles.header}>
+      <header className={styles.header} data-testid="header">
         <Container>
           <nav>
             <NavLink to="/" className={this.className}>

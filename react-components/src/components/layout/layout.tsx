@@ -7,7 +7,7 @@ export class Layout extends Component {
     return (
       <>
         <Header />
-        <main className="main">
+        <main className="main" data-testid="main">
           <Outlet />
         </main>
       </>
