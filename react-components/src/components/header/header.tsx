@@ -31,7 +31,7 @@ class HeaderComponent extends Component<WithRouterProps> {
     });
     return (
       <header className={styles.header} data-testid="header">
-        <Container>
+        <Container bp="sm">
           <nav className={styles.nav}>
             <div>
               {Object.entries(pages).map(([key, { path, title }]) => (
@@ -40,7 +40,7 @@ class HeaderComponent extends Component<WithRouterProps> {
                 </NavLink>
               ))}
             </div>
-            <div>{currentTitle && <h4>{currentTitle}</h4>}</div>
+            <div>{currentTitle && <h4 className={styles.header__title}>{currentTitle}</h4>}</div>
           </nav>
         </Container>
       </header>
