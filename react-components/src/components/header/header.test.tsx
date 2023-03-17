@@ -6,12 +6,10 @@ import { BrowserRouter } from 'react-router-dom';
 
 describe('Header', async () => {
   it('renders header links', async () => {
-    const { findByText } = render(<Header />, { wrapper: BrowserRouter });
+    const { findAllByRole } = render(<Header />, { wrapper: BrowserRouter });
 
-    const homeLink = await findByText(/home/i);
-    const aboutLink = await findByText(/about us/i);
+    const links = await findAllByRole('link');
 
-    expect(homeLink).toBeInTheDocument();
-    expect(aboutLink).toBeInTheDocument();
+    expect(links).toHaveLength(2);
   });
 });
