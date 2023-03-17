@@ -58,6 +58,7 @@ export class Search extends Component<
     return (
       <input
         className={cn(this.props.className, styles.search)}
+        type="search"
         placeholder="Search"
         {...this.props}
         value={this.state.search}
