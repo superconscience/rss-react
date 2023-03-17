@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Card as CardType } from '../../data/cards';
-import { PropsWithClassNameAndChildren } from '../../types/types';
+import { PropsWithClassName } from '../../types/types';
 import cn from 'classnames';
 import styles from './card.module.scss';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { humanizeNumber } from '../../utils/functions';
 import { LikeIcon } from '../ui/like-icon';
 import { ViewsIcon } from '../ui/views-icon';
 
-export type CardProps = PropsWithClassNameAndChildren & { card: CardType };
+export type CardProps = PropsWithClassName & { card: CardType };
 
 export type CardState = {
   image: string | undefined;
