@@ -24,8 +24,9 @@ export class Card extends Component<CardProps, CardState> {
   }
 
   loadImage = async (filename: string) => {
-    const [ext, ...nameParts] = filename.split('.').reverse();
-    const name = nameParts.join('.');
+    const sep = '.';
+    const [ext, ...nameParts] = filename.split(sep).reverse();
+    const name = nameParts.join(sep);
     const image = await import(`../../assets/images/${name}.${ext}`);
     this.setState({
       image: image.default,

@@ -8,34 +8,6 @@ import {
   prefix as localStoragePrefix,
 } from './localstorage';
 
-const localStorageMock = (function () {
-  let store: Record<string, string> = {};
-
-  return {
-    getItem(key: string) {
-      return store[key];
-    },
-
-    setItem(key: string, value: string) {
-      store[key] = value;
-    },
-
-    clear() {
-      store = {};
-    },
-
-    removeItem(key: string) {
-      delete store[key];
-    },
-
-    getAll() {
-      return store;
-    },
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-
 describe('localstorage', () => {
   describe('createStorageKey', () => {
     it('must create correct storage key', () => {
@@ -55,9 +27,9 @@ describe('localstorage', () => {
 
       expect(window.localStorage.getItem(key)).not.toEqual(JSON.stringify(value));
 
-      expect(JSON.stringify(window.localStorage.getItem('random'))).toBeUndefined();
+      expect(window.localStorage.getItem('random')).toBeNull();
 
-      expect(JSON.stringify(window.localStorage.getItem(key))).toBeUndefined();
+      expect(window.localStorage.getItem(key)).toBeNull();
     });
   });
 
