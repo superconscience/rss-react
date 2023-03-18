@@ -8,6 +8,8 @@ export default defineConfig({
     coverage: {
       provider: 'c8',
       reporter: ['text', 'json', 'html'],
+      all: true,
+      skipFull: true,
       reportsDirectory: './tests/unit/coverage'
     },
   },
