@@ -20,5 +20,6 @@
     "baseUrl": "./src"
   },
   "include": ["./src/**/*", "styled.d.ts", ".eslintrc.cjs", "vite.config.ts"],
+  "exclude": ["./tests/unit/coverage"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
