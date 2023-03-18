@@ -4,7 +4,7 @@ import styles from './header.module.scss';
 import cn from 'classnames';
 import { Container } from '../ui/container/container';
 import { WithRouterProps, withRouter } from '../hoc/with-router';
-import { pages } from '../../routes';
+import { pages } from '../../pages';
 
 class HeaderComponent extends Component<WithRouterProps> {
   static readonly classNames = {
