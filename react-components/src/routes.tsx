@@ -5,17 +5,6 @@ import { Home } from './pages/home/home';
 import { About } from './pages/about/about';
 import { pages } from './pages';
 
-// export const pages = {
-//   home: {
-//     path: '/',
-//     title: 'Home',
-//   },
-//   about: {
-//     path: '/about',
-//     title: 'About us',
-//   },
-// } as const;
-
 const routes: RouteObject[] = [
   {
     path: '*',
