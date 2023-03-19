@@ -1,6 +1,6 @@
 import { defineConfig, configDefaults } from 'vitest/config';
 
-const coverageExcluded = ['src/main.tsx', 'src/types/*'];
+const coverageExcluded = ['src/types/*'];
 
 export default defineConfig({
   test: {
