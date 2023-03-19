@@ -12,7 +12,7 @@ class HeaderComponent extends Component<WithRouterProps> {
     linkActive: styles.nav__link_active,
   };
 
-  className: NavLinkProps['className'] = ({ isActive }) =>
+  getClassName: NavLinkProps['className'] = ({ isActive }) =>
     isActive
       ? cn(HeaderComponent.classNames.link, HeaderComponent.classNames.linkActive)
       : HeaderComponent.classNames.link;
@@ -35,7 +35,7 @@ class HeaderComponent extends Component<WithRouterProps> {
           <nav className={styles.nav}>
             <div>
               {Object.entries(pages).map(([key, { path, title }]) => (
-                <NavLink key={key} to={path} className={this.className}>
+                <NavLink key={key} to={path} className={this.getClassName}>
                   {title}
                 </NavLink>
               ))}
