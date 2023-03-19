@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && npm run make:redirects",
     "test": "vitest run --coverage",
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
     "format": "prettier --write .",
     "check-types": "tsc --noEmit",
     "eslint": "eslint --fix . --ext .ts --ext .js",
-    "lint": "npm run eslint && npm run check-types"
+    "lint": "npm run eslint && npm run check-types",
+    "make:redirects": "echo /* /index.html 200 > dist/_redirects"
   },
   "dependencies": {
     "classnames": "^2.3.2",
