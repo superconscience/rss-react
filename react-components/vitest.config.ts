@@ -14,6 +14,5 @@ export default defineConfig({
       reportsDirectory: './tests/unit/coverage',
       exclude: [...configDefaults.coverage.exclude, ...coverageExcluded],
     },
-    exclude: [...configDefaults.exclude, ...coverageExcluded],
   },
 });
