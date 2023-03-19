@@ -1,5 +1,7 @@
 import { defineConfig, configDefaults } from 'vitest/config';
 
+const coverageExcluded = ['src/main.tsx', 'src/types/*'];
+
 export default defineConfig({
   test: {
     globals: true,
@@ -9,8 +11,9 @@ export default defineConfig({
       provider: 'c8',
       reporter: ['text', 'json', 'html'],
       all: true,
-      skipFull: true,
       reportsDirectory: './tests/unit/coverage',
+      exclude: [...configDefaults.coverage.exclude, ...coverageExcluded],
     },
+    exclude: [...configDefaults.exclude, ...coverageExcluded],
   },
 });
