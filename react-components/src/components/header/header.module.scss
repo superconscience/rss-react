@@ -1,0 +1,37 @@
+.header {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  background-color: #2c2e2e;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.header__title {
+  font-size: 200%;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  margin: 0;
+  color: lightskyblue;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+
+.nav__link {
+  &:not(:last-child) {
+    margin-right: 1.5rem;
+  }
+  &_active {
+    color: #f02525;
+  }
+  &:hover {
+    opacity: 0.8;
+  }
+}
