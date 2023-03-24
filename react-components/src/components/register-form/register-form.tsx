@@ -6,6 +6,7 @@ import { validation } from './validate';
 import { getRandomId } from '../../utils/functions';
 import { TextInput } from '../ui/input/text-input';
 import { Select } from '../ui/select/select';
+import { RadioInput } from '../ui/radio/radio';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -298,30 +299,22 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
           <div className="col-12">
             <label className="form-label">Gender</label>
             <div>
-              <input
-                type="radio"
-                className="btn-check"
+              <RadioInput
+                label="Male"
                 name="gender"
-                id="genderMale"
-                autoComplete="off"
                 value="male"
-                defaultChecked
+                ref={this.genderMaleRef}
+                labelProps={{ className: 'btn btn-secondary' }}
+                inputProps={{ className: 'btn-check' }}
               />
-              <label className="btn btn-secondary" htmlFor="genderMale">
-                Male
-              </label>
-
-              <input
-                type="radio"
-                className="btn-check"
+              <RadioInput
+                label="Female"
                 name="gender"
-                id="genderFemale"
                 value="female"
-                autoComplete="off"
+                ref={this.genderFemaleRef}
+                labelProps={{ className: 'btn btn-secondary' }}
+                inputProps={{ className: 'btn-check' }}
               />
-              <label className="btn btn-secondary" htmlFor="genderFemale">
-                Female
-              </label>
               {this.errorElements('gender')}
             </div>
           </div>
