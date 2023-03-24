@@ -1,13 +1,13 @@
 import cn from 'classnames';
 import { Component, FormEventHandler, RefObject, createRef } from 'react';
 import { Gender, User } from '../../models/user';
+import { getRandomId } from '../../utils/functions';
+import { CheckboxInput } from '../ui/checkbox/checkbox';
+import { TextInput } from '../ui/input/text-input';
+import { RadioInput } from '../ui/radio/radio';
+import { Select } from '../ui/select/select';
 import { UploadImage } from '../upload-image/upload-image';
 import { validation } from './validate';
-import { getRandomId } from '../../utils/functions';
-import { TextInput } from '../ui/input/text-input';
-import { Select } from '../ui/select/select';
-import { RadioInput } from '../ui/radio/radio';
-import { CheckboxInput } from '../ui/checkbox/checkbox';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -293,7 +293,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
           </div>
 
           <div className="col-12">
-            <UploadImage name="image" setImage={this.setImage} />
+            <UploadImage name="image" setImage={this.setImage} ref={this.imageRef} />
             {this.errorElements('image')}
             {image && <img src={image} alt={'image'} width="100%" className="mt-3" />}
           </div>

@@ -1,40 +1,42 @@
-import { ChangeEvent, Component } from 'react';
-import { readImage } from '../../utils/functions';
+import { ChangeEvent, forwardRef } from 'react';
+import { getRandomId, readImage } from '../../utils/functions';
 
 export type UploadImageProps = {
   name: string;
   setImage: (src: string | null) => void;
 };
 
-export class UploadImage extends Component<UploadImageProps> {
-  onImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
-      const file = event.target.files[0];
-      if (file.size) {
-        readImage(file, (src) => {
-          this.props.setImage(src);
-        });
+export const UploadImage = forwardRef<HTMLInputElement, UploadImageProps>(
+  ({ name, setImage }, ref) => {
+    const id = `uploadImage-${getRandomId()}`;
+    const onImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files?.length) {
+        const file = event.target.files[0];
+        if (file.size) {
+          readImage(file, (src) => {
+            setImage(src);
+          });
+        }
+      } else {
+        setImage(null);
       }
-    } else {
-      this.props.setImage(null);
-    }
-  };
+    };
 
-  render() {
     return (
       <>
-        <label htmlFor="formFile" className="form-label">
+        <label htmlFor={id} className="form-label">
           Upload Image
         </label>
         <input
+          ref={ref}
           accept="image/*"
           className="form-control"
           type="file"
-          id="formFile"
-          name={this.props.name}
-          onChange={this.onImageChange}
+          id={id}
+          name={name}
+          onChange={onImageChange}
         />
       </>
     );
   }
-}
+);
