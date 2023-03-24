@@ -1,9 +1,9 @@
 import { EMAIL_REGEXP } from '../../utils/constants';
-import { RegisterFormState } from './register-form';
+import { RegisterFormElements } from './register-form';
 
 type ValidateFunc = (value: string | boolean | File | null) => ValidationResult;
 
-type ValidationResult = { isValid: true } | { isValid: false; messages: string[] };
+export type ValidationResult = { isValid: true } | { isValid: false; messages: string[] };
 
 const createValidationResult = (messages: string[]): ValidationResult =>
   messages.length > 0 ? { isValid: false, messages } : { isValid: true };
@@ -26,7 +26,7 @@ const validateNameFunc: (name: string) => ValidateFunc = (name) => (value) => {
 };
 
 export const validation: Record<
-  keyof RegisterFormState,
+  keyof RegisterFormElements,
   {
     validate: ValidateFunc;
   }
@@ -103,10 +103,10 @@ export const validation: Record<
   image: {
     validate: (value) => {
       const messages: string[] = [];
-      if (!(value instanceof File)) {
+      if (!(value instanceof File) && value != null) {
         throw Error(`Image input should have a file type`);
       }
-      if (!value.name) {
+      if (value == null || !value.name) {
         messages.push(`Image is required`);
       }
       return createValidationResult(messages);
@@ -127,7 +127,7 @@ export const validation: Record<
   agree: {
     validate: (value) => {
       const messages: string[] = [];
-      if (value !== 'on') {
+      if (value !== true) {
         messages.push('Error');
       }
       return createValidationResult(messages);

@@ -1,41 +1,51 @@
 import cn from 'classnames';
 import { Component, FormEventHandler, RefObject, createRef } from 'react';
-import { Gender, User } from '../../models/user';
+import { User } from '../../models/user';
 import { getRandomId } from '../../utils/functions';
 import { CheckboxInput } from '../ui/checkbox/checkbox';
+import { AllInputProps, AllSelectProps, ValidClassName } from '../ui/common';
 import { TextInput } from '../ui/input/text-input';
 import { RadioInput } from '../ui/radio/radio';
 import { Select } from '../ui/select/select';
 import { UploadImage } from '../upload-image/upload-image';
-import { validation } from './validate';
-import { ValidClassName } from '../ui/common';
+import { ValidationResult, validation } from './validate';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
 };
 
+type GetElementValueType<
+  K extends keyof RegisterFormElements,
+  E = RegisterFormElements[K]
+> = E extends HTMLInputElement
+  ? AllInputProps['value']
+  : E extends HTMLSelectElement
+  ? AllSelectProps['value']
+  : never;
+
+type KeysForRefs = Exclude<keyof RegisterFormElements, 'gender'> | 'genderMale' | 'genderFemale';
+
 export type RegisterFormComponentState = {
   image: string | null;
   validated: boolean;
   errors: FormErrors;
+  values: { [K in keyof RegisterFormElements]: GetElementValueType<K> };
 };
 
-type FormStateData<T> = { value: T };
-
-export type RegisterFormState = {
-  name: FormStateData<string>;
-  lastName: FormStateData<string>;
-  email: FormStateData<string>;
-  birthdate: FormStateData<string>;
-  city: FormStateData<string>;
-  state: FormStateData<string>;
-  zip: FormStateData<string>;
-  image: FormStateData<File>;
-  gender: FormStateData<'male' | 'female'>;
-  agree: FormStateData<boolean>;
+export type RegisterFormElements = {
+  name: HTMLInputElement;
+  lastName: HTMLInputElement;
+  email: HTMLInputElement;
+  birthdate: HTMLInputElement;
+  city: HTMLInputElement;
+  state: HTMLSelectElement;
+  zip: HTMLInputElement;
+  image: HTMLInputElement;
+  gender: HTMLInputElement;
+  agree: HTMLInputElement;
 };
 
-type FormErrors = Record<keyof RegisterFormState, string[]>;
+type FormErrors = Record<keyof RegisterFormElements, string[]>;
 
 const registerFormInitialState: RegisterFormComponentState = {
   image: null,
@@ -52,6 +62,18 @@ const registerFormInitialState: RegisterFormComponentState = {
     gender: [],
     agree: [],
   },
+  values: {
+    name: undefined,
+    lastName: undefined,
+    email: undefined,
+    birthdate: undefined,
+    state: undefined,
+    city: undefined,
+    image: undefined,
+    zip: undefined,
+    gender: undefined,
+    agree: undefined,
+  },
 };
 
 export class RegisterForm extends Component<RegisterFormProps, RegisterFormComponentState> {
@@ -59,34 +81,34 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     wasValidated: 'was-validated',
   };
 
+  formElementsRefs: {
+    [K in Exclude<KeysForRefs | keyof RegisterFormElements, 'gender'>]: K extends
+      | 'genderMale'
+      | 'genderFemale'
+      ? RefObject<RegisterFormElements['gender']>
+      : K extends keyof RegisterFormElements
+      ? RefObject<RegisterFormElements[K]>
+      : never;
+  } = {
+    name: createRef<HTMLInputElement>(),
+    lastName: createRef<HTMLInputElement>(),
+    email: createRef<HTMLInputElement>(),
+    birthdate: createRef<HTMLInputElement>(),
+    state: createRef<HTMLSelectElement>(),
+    city: createRef<HTMLInputElement>(),
+    image: createRef<HTMLInputElement>(),
+    zip: createRef<HTMLInputElement>(),
+    genderMale: createRef<HTMLInputElement>(),
+    genderFemale: createRef<HTMLInputElement>(),
+    agree: createRef<HTMLInputElement>(),
+  };
+
   formRef: RefObject<HTMLFormElement>;
-  nameRef: RefObject<HTMLInputElement>;
-  lastNameRef: RefObject<HTMLInputElement>;
-  emailRef: RefObject<HTMLInputElement>;
-  birthdateRef: RefObject<HTMLInputElement>;
-  stateRef: RefObject<HTMLSelectElement>;
-  cityRef: RefObject<HTMLInputElement>;
-  imageRef: RefObject<HTMLInputElement>;
-  zipRef: RefObject<HTMLInputElement>;
-  genderMaleRef: RefObject<HTMLInputElement>;
-  genderFemaleRef: RefObject<HTMLInputElement>;
-  agreeRef: RefObject<HTMLInputElement>;
   state: RegisterFormComponentState = registerFormInitialState;
 
   constructor(props: RegisterFormProps) {
     super(props);
     this.formRef = createRef<HTMLFormElement>();
-    this.nameRef = createRef<HTMLInputElement>();
-    this.lastNameRef = createRef<HTMLInputElement>();
-    this.emailRef = createRef<HTMLInputElement>();
-    this.birthdateRef = createRef<HTMLInputElement>();
-    this.stateRef = createRef<HTMLSelectElement>();
-    this.cityRef = createRef<HTMLInputElement>();
-    this.imageRef = createRef<HTMLInputElement>();
-    this.zipRef = createRef<HTMLInputElement>();
-    this.genderMaleRef = createRef<HTMLInputElement>();
-    this.genderFemaleRef = createRef<HTMLInputElement>();
-    this.agreeRef = createRef<HTMLInputElement>();
   }
 
   useId = getRandomId();
@@ -97,18 +119,15 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     if (!(form instanceof HTMLFormElement)) {
       return;
     }
-    const formData = new FormData(form);
-    const errors = this.validate(formData);
+    const errors = this.validate();
     const isValid = !this.hasErrors(errors);
 
-    if (!isValid) {
-      this.setFormValidity(errors);
-    }
     this.setState((prev) => {
       return { ...prev, errors, validated: true };
     });
+
     if (isValid) {
-      const newUser = this.extractUser(formData);
+      const newUser = this.extractUser();
       this.props.addUser(newUser);
       this.resetForm();
     }
@@ -118,110 +137,75 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     this.setState({ image: src });
   };
 
-  validate = (formData: FormData): FormErrors => {
+  validate = (): FormErrors => {
     const errors = { ...registerFormInitialState.errors };
-    Object.entries(validation).forEach(([name, { validate }]) => {
-      const result = validate(formData.get(name) as string | boolean | File);
+    const setError = (name: keyof typeof errors, result: ValidationResult) => {
       if (!result.isValid) {
-        errors[name as keyof RegisterFormState] = result.messages;
+        errors[name] = result.messages;
+      }
+    };
+    Object.entries(validation).forEach(([name, { validate }]) => {
+      const typedName = name as keyof typeof validation;
+      if (typedName === 'agree' || typedName === 'gender' || typedName === 'image') {
+        return;
+      }
+      const element = this.formElementsRefs[typedName].current;
+      if (element) {
+        const result = validate(element.value);
+        setError(typedName, result);
       }
     });
+    const { image, agree, genderMale, genderFemale } = this.formElementsRefs;
+    if (image.current) {
+      const result = validation.image.validate(image.current.files?.[0] || null);
+      setError('image', result);
+    }
+    if (agree.current) {
+      const result = validation.agree.validate(agree.current.checked);
+      setError('agree', result);
+    }
+    if (genderMale.current && genderFemale.current) {
+      const result = validation.agree.validate(
+        genderMale.current.checked || genderFemale.current.checked
+      );
+      setError('gender', result);
+    }
     return errors;
   };
 
-  setCustomValidity = (element: Element | RadioNodeList | null, validity: string) => {
-    if (element instanceof RadioNodeList) {
-      element.forEach((radio) => (radio as HTMLInputElement).setCustomValidity(validity));
-    } else if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-      element.setCustomValidity(validity);
-    }
-  };
-
-  setFormValidity = (errors: FormErrors): void => {
-    const form = this.formRef.current;
-    if (!form) {
-      return;
-    }
-    Object.entries(errors).forEach(([name, messages]) => {
-      const element = form.elements.namedItem(name);
-      if (messages.length > 0) {
-        this.setCustomValidity(element, 'invalid');
-      } else {
-        this.setCustomValidity(element, '');
-      }
-    });
-  };
-
   resetForm = () => {
-    const form = this.formRef.current;
-    if (form) {
-      [...form.elements].forEach((element) => {
-        this.resetFormElement(element);
-        this.setCustomValidity(element, '');
-      });
-      this.setState({ errors: { ...registerFormInitialState.errors }, validated: false });
-    }
-  };
-
-  resetFormElement = (element: unknown) => {
-    if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-      if (element instanceof HTMLInputElement) {
-        if (element.type === 'file') {
-          element.files = null;
-          this.setImage(null);
-          element.value = '';
-        } else if (element.type === 'checkbox') {
-          element.checked = false;
-        } else {
-          element.value = '';
-        }
-      } else {
-        element.value = '';
-      }
-    } else if (element instanceof RadioNodeList) {
-      element.forEach((radio) => ((radio as HTMLInputElement).checked = false));
-    }
+    this.formRef.current?.reset();
+    this.setImage(null);
+    this.setState({
+      values: { ...registerFormInitialState.values },
+      errors: { ...registerFormInitialState.errors },
+      validated: false,
+    });
   };
 
   hasErrors = (errors: FormErrors): boolean =>
     Object.values(errors).some((messages) => messages.length > 0);
 
-  extractUser = (formData: FormData): User => {
-    const name = formData.get('name') as string;
-    const lastName = formData.get('lastName') as string;
-    const email = formData.get('email') as string;
-    const birthdate = formData.get('birthdate') as string;
-    const state = formData.get('state') as string;
-    const city = formData.get('city') as string;
-    const image = formData.get('image') as File;
-    const gender = formData.get('gender') as string;
-    const zip = formData.get('zip') as string;
-    if (
-      [name, lastName, email, birthdate, state, city, gender, zip].some(
-        (value) => typeof value !== 'string'
-      ) ||
-      !(image instanceof File)
-    ) {
-      throw Error('Wrong User');
-    }
+  extractUser = (): User => {
+    const { name, lastName, email, birthdate, state, city, zip, genderMale } =
+      this.formElementsRefs;
     return {
       id: getRandomId(),
-      name: name || '',
-      lastName: lastName || '',
-      email: email || '',
-      birthdate: new Date(birthdate),
-      state: state || '',
-      city: city || '',
+      name: name.current?.value || '',
+      lastName: lastName.current?.value || '',
+      email: email.current?.value || '',
+      birthdate: new Date(birthdate?.current?.value || ''),
+      state: state.current?.value || '',
+      city: city.current?.value || '',
+      zip: Number(zip.current?.value) || 0,
       image: this.state.image || '',
-      gender: (gender as Gender) || '',
-      zip: Number(zip),
+      gender: genderMale.current?.checked ? 'male' : 'female',
     };
   };
 
-  errorElements = (name: keyof RegisterFormState) => {
+  errorElements = (name: keyof RegisterFormElements) => {
     const { errors } = this.state;
     const messages = errors[name];
-    console.log(name, messages);
     return (
       (messages.length > 0 &&
         messages.map((message) => (
@@ -261,7 +245,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <TextInput
               label="Name"
               name="name"
-              ref={this.nameRef}
+              ref={this.formElementsRefs.name}
               validClassName={this.getValidationResultClassName('name')}
             />
             {this.errorElements('name')}
@@ -270,7 +254,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <TextInput
               label="Last Name"
               name="lastName"
-              ref={this.lastNameRef}
+              ref={this.formElementsRefs.lastName}
               validClassName={this.getValidationResultClassName('lastName')}
             />
             {this.errorElements('lastName')}
@@ -279,7 +263,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <TextInput
               label="Email"
               name="email"
-              ref={this.emailRef}
+              ref={this.formElementsRefs.email}
               inputProps={{ type: 'email' }}
               validClassName={this.getValidationResultClassName('email')}
             />
@@ -289,7 +273,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <TextInput
               label="Birth Date"
               name="birthdate"
-              ref={this.birthdateRef}
+              ref={this.formElementsRefs.birthdate}
               inputProps={{ type: 'date' }}
               validClassName={this.getValidationResultClassName('birthdate')}
             />
@@ -299,7 +283,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <TextInput
               label="City"
               name="city"
-              ref={this.cityRef}
+              ref={this.formElementsRefs.city}
               validClassName={this.getValidationResultClassName('city')}
             />
             {this.errorElements('city')}
@@ -308,7 +292,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <TextInput
               label="Zip"
               name="zip"
-              ref={this.cityRef}
+              ref={this.formElementsRefs.zip}
               inputProps={{ maxLength: 5 }}
               validClassName={this.getValidationResultClassName('zip')}
             />
@@ -318,7 +302,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <Select
               label="State"
               name="state"
-              ref={this.stateRef}
+              ref={this.formElementsRefs.state}
               validClassName={this.getValidationResultClassName('state')}
             >
               <option value={0} style={{ display: 'none' }}>
@@ -336,7 +320,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             <UploadImage
               name="image"
               setImage={this.setImage}
-              ref={this.imageRef}
+              ref={this.formElementsRefs.image}
               validClassName={this.getValidationResultClassName('image')}
             />
             {this.errorElements('image')}
@@ -349,16 +333,17 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
                 label="Male"
                 name="gender"
                 value="male"
-                ref={this.genderMaleRef}
+                ref={this.formElementsRefs.genderMale}
                 labelProps={{ className: 'btn' }}
-                inputProps={{ className: 'btn-check', defaultChecked: true }}
+                inputProps={{ className: 'btn-check' }}
                 validClassName={this.getValidationResultClassName('gender')}
+                checked
               />
               <RadioInput
                 label="Female"
                 name="gender"
                 value="female"
-                ref={this.genderFemaleRef}
+                ref={this.formElementsRefs.genderFemale}
                 labelProps={{ className: 'btn' }}
                 inputProps={{ className: 'btn-check' }}
                 validClassName={this.getValidationResultClassName('gender')}
@@ -371,7 +356,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
               <CheckboxInput
                 label="I agree with the fact that my data will be displayed somewhere on this page"
                 name="agree"
-                ref={this.agreeRef}
+                ref={this.formElementsRefs.agree}
                 validClassName={this.getValidationResultClassName('agree')}
               />
             </div>
