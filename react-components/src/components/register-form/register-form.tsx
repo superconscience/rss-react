@@ -3,7 +3,8 @@ import { Component, FormEventHandler, RefObject, createRef } from 'react';
 import { Gender, User } from '../../models/user';
 import { UploadImage } from '../upload-image/upload-image';
 import { validation } from './validate';
-import { useId } from '../../utils/functions';
+import { getRandomId } from '../../utils/functions';
+import { TextInput } from '../ui/input/input';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -12,7 +13,6 @@ export type RegisterFormProps = {
 export type RegisterFormComponentState = {
   image: string | null;
   validated: boolean;
-  submitted: boolean;
   errors: FormErrors;
 };
 
@@ -36,7 +36,6 @@ type FormErrors = Record<keyof RegisterFormState, string[]>;
 const registerFormInitialState: RegisterFormComponentState = {
   image: null,
   validated: false,
-  submitted: false,
   errors: {
     name: [],
     lastName: [],
@@ -57,14 +56,36 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
   };
 
   formRef: RefObject<HTMLFormElement>;
+  nameRef: RefObject<HTMLInputElement>;
+  lastNameRef: RefObject<HTMLInputElement>;
+  emailRef: RefObject<HTMLInputElement>;
+  birthdateRef: RefObject<HTMLInputElement>;
+  stateRef: RefObject<HTMLSelectElement>;
+  cityRef: RefObject<HTMLInputElement>;
+  imageRef: RefObject<HTMLInputElement>;
+  zipRef: RefObject<HTMLInputElement>;
+  genderMaleRef: RefObject<HTMLInputElement>;
+  genderFemaleRef: RefObject<HTMLInputElement>;
+  agreeRef: RefObject<HTMLInputElement>;
   state: RegisterFormComponentState = registerFormInitialState;
 
   constructor(props: RegisterFormProps) {
     super(props);
     this.formRef = createRef<HTMLFormElement>();
+    this.nameRef = createRef<HTMLInputElement>();
+    this.lastNameRef = createRef<HTMLInputElement>();
+    this.emailRef = createRef<HTMLInputElement>();
+    this.birthdateRef = createRef<HTMLInputElement>();
+    this.stateRef = createRef<HTMLSelectElement>();
+    this.cityRef = createRef<HTMLInputElement>();
+    this.imageRef = createRef<HTMLInputElement>();
+    this.zipRef = createRef<HTMLInputElement>();
+    this.genderMaleRef = createRef<HTMLInputElement>();
+    this.genderFemaleRef = createRef<HTMLInputElement>();
+    this.agreeRef = createRef<HTMLInputElement>();
   }
 
-  useId = useId();
+  useId = getRandomId();
 
   handleSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
@@ -80,7 +101,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
       this.setFormValidity(errors);
     }
     this.setState((prev) => {
-      return { ...prev, errors, submitted: isValid, validated: true };
+      return { ...prev, errors, validated: true };
     });
     if (isValid) {
       const newUser = this.extractUser(formData);
@@ -180,7 +201,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
       throw Error('Wrong User');
     }
     return {
-      id: useId(),
+      id: getRandomId(),
       name: name || '',
       lastName: lastName || '',
       email: email || '',
@@ -222,82 +243,37 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
           noValidate={true}
         >
           <div className="col-md-12 col-sm-6 col-6">
-            <label htmlFor="inputName" className="form-label">
-              Name
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="inputName"
-              name="name"
-              defaultValue="Username"
-            />
+            <TextInput label="Name" name="name" ref={this.nameRef} />
             {this.errorElements('name')}
           </div>
           <div className="col-md-12 col-sm-6 col-6">
-            <label htmlFor="inputLastName" className="form-label">
-              Last Name
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="inputLastName"
-              name="lastName"
-              defaultValue="Lastname"
-            />
+            <TextInput label="Last Name" name="lastName" ref={this.lastNameRef} />
             {this.errorElements('lastName')}
           </div>
           <div className="col-md-12 col-sm-6 col-6">
-            <label htmlFor="inputEmail" className="form-label">
-              Email
-            </label>
-            <input
-              type="email"
-              className="form-control"
-              id="inputEmail"
+            <TextInput
+              label="Email"
               name="email"
-              defaultValue="test@test.com"
+              ref={this.emailRef}
+              inputProps={{ type: 'email' }}
             />
             {this.errorElements('email')}
           </div>
           <div className="col-md-12 col-sm-6 col-6">
-            <label htmlFor="inputBirthdate" className="form-label">
-              Birth Date
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="inputBirthdate"
+            <TextInput
+              label="Birth Date"
               name="birthdate"
-              defaultValue="2023-03-20"
+              ref={this.birthdateRef}
+              inputProps={{ type: 'date' }}
             />
             {this.errorElements('birthdate')}
           </div>
           <div className="col-md-12 col-6">
-            <label htmlFor="inputCity" className="form-label">
-              City
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="inputCity"
-              name="city"
-              defaultValue="London"
-            />
+            <TextInput label="City" name="city" ref={this.cityRef} />
             {this.errorElements('city')}
           </div>
           <div className="col-md-12 col-6">
-            <label htmlFor="inputZip" className="form-label">
-              Zip
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="inputZip"
-              name="zip"
-              maxLength={5}
-              defaultValue="90210"
-            />
+            <TextInput label="Zip" name="zip" ref={this.cityRef} inputProps={{ maxLength: 5 }} />
             {this.errorElements('zip')}
           </div>
           <div className="col-12">
