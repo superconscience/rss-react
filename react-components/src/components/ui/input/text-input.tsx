@@ -18,7 +18,7 @@ export type TextInputProps = {
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ label, name, inputProps, labelProps }, ref) => {
-    const id = `inputName-${getRandomId()}`;
+    const id = `textInput-${getRandomId()}`;
     return (
       <>
         <label {...labelProps} htmlFor={id} className={cn('form-label', labelProps?.className)}>

@@ -4,7 +4,8 @@ import { Gender, User } from '../../models/user';
 import { UploadImage } from '../upload-image/upload-image';
 import { validation } from './validate';
 import { getRandomId } from '../../utils/functions';
-import { TextInput } from '../ui/input/input';
+import { TextInput } from '../ui/input/text-input';
+import { Select } from '../ui/select/select';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -277,10 +278,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             {this.errorElements('zip')}
           </div>
           <div className="col-12">
-            <label htmlFor="inputState" className="form-label">
-              State
-            </label>
-            <select id="inputState" className="form-select" name="state" defaultValue={'Japan'}>
+            <Select label="State" name="state" ref={this.stateRef}>
               <option value={0} style={{ display: 'none' }}>
                 Choose state...
               </option>
@@ -288,7 +286,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
               <option>USA</option>
               <option>Italy</option>
               <option>Latvia</option>
-            </select>
+            </Select>
             {this.errorElements('state')}
           </div>
 
