@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { getRandomId } from '../../../utils/functions';
-import { DefaultLabelProps, DefaultRadioProps } from '../common';
+import { DefaultLabelProps, DefaultRadioProps, Validatable } from '../common';
+import classNames from 'classnames';
 
 export type RadioInputProps = {
   inputProps?: DefaultRadioProps;
@@ -10,8 +11,8 @@ export type RadioInputProps = {
   value: string;
 };
 
-export const RadioInput = forwardRef<HTMLInputElement, RadioInputProps>(
-  ({ label, name, value, inputProps, labelProps }, ref) => {
+export const RadioInput = forwardRef<HTMLInputElement, RadioInputProps & Validatable>(
+  ({ label, name, value, inputProps, labelProps, validClassName }, ref) => {
     const id = `radio-${getRandomId()}`;
     return (
       <>
@@ -19,6 +20,7 @@ export const RadioInput = forwardRef<HTMLInputElement, RadioInputProps>(
           ref={ref}
           type="radio"
           {...inputProps}
+          className={classNames(validClassName, inputProps?.className)}
           name={name}
           id={id}
           autoComplete="off"

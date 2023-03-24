@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { PropsWithChildren, forwardRef } from 'react';
 import { getRandomId } from '../../../utils/functions';
-import { DefaultLabelProps, DefaultSelectProps } from '../common';
+import { DefaultLabelProps, DefaultSelectProps, Validatable } from '../common';
 
 export type SelectProps = {
   selectProps?: DefaultSelectProps;
@@ -10,8 +10,8 @@ export type SelectProps = {
   label: string;
 };
 
-export const Select = forwardRef<HTMLSelectElement, PropsWithChildren<SelectProps>>(
-  ({ label, name, labelProps, selectProps, children }, ref) => {
+export const Select = forwardRef<HTMLSelectElement, PropsWithChildren<SelectProps> & Validatable>(
+  ({ label, name, labelProps, selectProps, children, validClassName }, ref) => {
     const id = `select-${getRandomId()}`;
     return (
       <>
@@ -21,7 +21,7 @@ export const Select = forwardRef<HTMLSelectElement, PropsWithChildren<SelectProp
         <select
           ref={ref}
           {...selectProps}
-          className={cn('form-control', selectProps?.className)}
+          className={cn('form-control', validClassName, selectProps?.className)}
           id={id}
           name={name}
         >

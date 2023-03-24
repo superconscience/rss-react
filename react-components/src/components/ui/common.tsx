@@ -27,3 +27,9 @@ export type DefaultSelectProps = SelectProps<'id' | 'name'>;
 export type DefaultCheckboxProps = InputProps<'id' | 'name' | 'type'>;
 
 export type DefaultRadioProps = InputProps<'id' | 'name' | 'type' | 'value'>;
+
+export type ValidClassName = 'valid' | 'invalid';
+
+export type Validatable = {
+  validClassName: ValidClassName | null;
+};

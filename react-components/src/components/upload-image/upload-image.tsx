@@ -1,13 +1,15 @@
 import { ChangeEvent, forwardRef } from 'react';
 import { getRandomId, readImage } from '../../utils/functions';
+import { Validatable } from '../ui/common';
+import classNames from 'classnames';
 
 export type UploadImageProps = {
   name: string;
   setImage: (src: string | null) => void;
 };
 
-export const UploadImage = forwardRef<HTMLInputElement, UploadImageProps>(
-  ({ name, setImage }, ref) => {
+export const UploadImage = forwardRef<HTMLInputElement, UploadImageProps & Validatable>(
+  ({ name, setImage, validClassName }, ref) => {
     const id = `uploadImage-${getRandomId()}`;
     const onImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
       if (event.target.files?.length) {
@@ -30,7 +32,7 @@ export const UploadImage = forwardRef<HTMLInputElement, UploadImageProps>(
         <input
           ref={ref}
           accept="image/*"
-          className="form-control"
+          className={classNames('form-control', validClassName)}
           type="file"
           id={id}
           name={name}

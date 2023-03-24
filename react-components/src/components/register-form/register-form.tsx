@@ -8,6 +8,7 @@ import { RadioInput } from '../ui/radio/radio';
 import { Select } from '../ui/select/select';
 import { UploadImage } from '../upload-image/upload-image';
 import { validation } from './validate';
+import { ValidClassName } from '../ui/common';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -220,6 +221,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
   errorElements = (name: keyof RegisterFormState) => {
     const { errors } = this.state;
     const messages = errors[name];
+    console.log(name, messages);
     return (
       (messages.length > 0 &&
         messages.map((message) => (
@@ -229,6 +231,16 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
         ))) ||
       null
     );
+  };
+
+  getValidationResultClassName = (
+    name: keyof RegisterFormComponentState['errors']
+  ): ValidClassName | null => {
+    const { errors, validated } = this.state;
+    if (!validated) {
+      return null;
+    }
+    return errors[name].length > 0 ? 'invalid' : 'valid';
   };
 
   render() {
@@ -246,11 +258,21 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
           noValidate={true}
         >
           <div className="col-md-12 col-sm-6 col-6">
-            <TextInput label="Name" name="name" ref={this.nameRef} />
+            <TextInput
+              label="Name"
+              name="name"
+              ref={this.nameRef}
+              validClassName={this.getValidationResultClassName('name')}
+            />
             {this.errorElements('name')}
           </div>
           <div className="col-md-12 col-sm-6 col-6">
-            <TextInput label="Last Name" name="lastName" ref={this.lastNameRef} />
+            <TextInput
+              label="Last Name"
+              name="lastName"
+              ref={this.lastNameRef}
+              validClassName={this.getValidationResultClassName('lastName')}
+            />
             {this.errorElements('lastName')}
           </div>
           <div className="col-md-12 col-sm-6 col-6">
@@ -259,6 +281,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
               name="email"
               ref={this.emailRef}
               inputProps={{ type: 'email' }}
+              validClassName={this.getValidationResultClassName('email')}
             />
             {this.errorElements('email')}
           </div>
@@ -268,19 +291,36 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
               name="birthdate"
               ref={this.birthdateRef}
               inputProps={{ type: 'date' }}
+              validClassName={this.getValidationResultClassName('birthdate')}
             />
             {this.errorElements('birthdate')}
           </div>
           <div className="col-md-12 col-6">
-            <TextInput label="City" name="city" ref={this.cityRef} />
+            <TextInput
+              label="City"
+              name="city"
+              ref={this.cityRef}
+              validClassName={this.getValidationResultClassName('city')}
+            />
             {this.errorElements('city')}
           </div>
           <div className="col-md-12 col-6">
-            <TextInput label="Zip" name="zip" ref={this.cityRef} inputProps={{ maxLength: 5 }} />
+            <TextInput
+              label="Zip"
+              name="zip"
+              ref={this.cityRef}
+              inputProps={{ maxLength: 5 }}
+              validClassName={this.getValidationResultClassName('zip')}
+            />
             {this.errorElements('zip')}
           </div>
           <div className="col-12">
-            <Select label="State" name="state" ref={this.stateRef}>
+            <Select
+              label="State"
+              name="state"
+              ref={this.stateRef}
+              validClassName={this.getValidationResultClassName('state')}
+            >
               <option value={0} style={{ display: 'none' }}>
                 Choose state...
               </option>
@@ -293,7 +333,12 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
           </div>
 
           <div className="col-12">
-            <UploadImage name="image" setImage={this.setImage} ref={this.imageRef} />
+            <UploadImage
+              name="image"
+              setImage={this.setImage}
+              ref={this.imageRef}
+              validClassName={this.getValidationResultClassName('image')}
+            />
             {this.errorElements('image')}
             {image && <img src={image} alt={'image'} width="100%" className="mt-3" />}
           </div>
@@ -305,16 +350,18 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
                 name="gender"
                 value="male"
                 ref={this.genderMaleRef}
-                labelProps={{ className: 'btn btn-secondary' }}
-                inputProps={{ className: 'btn-check' }}
+                labelProps={{ className: 'btn' }}
+                inputProps={{ className: 'btn-check', defaultChecked: true }}
+                validClassName={this.getValidationResultClassName('gender')}
               />
               <RadioInput
                 label="Female"
                 name="gender"
                 value="female"
                 ref={this.genderFemaleRef}
-                labelProps={{ className: 'btn btn-secondary' }}
+                labelProps={{ className: 'btn' }}
                 inputProps={{ className: 'btn-check' }}
+                validClassName={this.getValidationResultClassName('gender')}
               />
               {this.errorElements('gender')}
             </div>
@@ -325,6 +372,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
                 label="I agree with the fact that my data will be displayed somewhere on this page"
                 name="agree"
                 ref={this.agreeRef}
+                validClassName={this.getValidationResultClassName('agree')}
               />
             </div>
           </div>

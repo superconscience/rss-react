@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { forwardRef } from 'react';
 import { getRandomId } from '../../../utils/functions';
-import { DefaultCheckboxProps, DefaultLabelProps } from '../common';
+import { DefaultCheckboxProps, DefaultLabelProps, Validatable } from '../common';
 
 export type CheckboxInputProps = {
   inputProps?: DefaultCheckboxProps;
@@ -10,8 +10,8 @@ export type CheckboxInputProps = {
   label: string;
 };
 
-export const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
-  ({ label, name, inputProps, labelProps }, ref) => {
+export const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps & Validatable>(
+  ({ label, name, inputProps, labelProps, validClassName }, ref) => {
     const id = `checkbox-${getRandomId()}`;
     return (
       <>
@@ -19,7 +19,7 @@ export const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
           ref={ref}
           type="checkbox"
           {...inputProps}
-          className={classNames('form-check-input', inputProps?.className)}
+          className={classNames('form-check-input', validClassName, inputProps?.className)}
           name={name}
           id={id}
           autoComplete="off"
