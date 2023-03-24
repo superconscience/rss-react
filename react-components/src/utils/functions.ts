@@ -21,3 +21,12 @@ export const readImage = (file: File, callback: (src: string) => void) => {
 
   reader.readAsDataURL(file);
 };
+
+export const capitalize = (value: string) => value.slice(0, 1).toUpperCase() + value.slice(1);
+
+export const useUniqueId: () => () => string = () => {
+  let id = 0;
+  return () => {
+    return (++id).toString();
+  };
+};

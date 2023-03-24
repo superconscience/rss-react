@@ -1,8 +1,9 @@
-import classNames from 'classnames';
+import cn from 'classnames';
 import { Component, FormEventHandler, RefObject, createRef } from 'react';
 import { Gender, User } from '../../models/user';
 import { UploadImage } from '../upload-image/upload-image';
 import { validation } from './validate';
+import { useUniqueId } from '../../utils/functions';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -62,6 +63,8 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     super(props);
     this.formRef = createRef<HTMLFormElement>();
   }
+
+  useId = useUniqueId();
 
   handleSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
@@ -144,6 +147,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
       throw Error('Wrong User');
     }
     return {
+      id: this.useId(),
       name: name || '',
       lastName: lastName || '',
       email: email || '',
@@ -179,7 +183,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
         </div>
 
         <form
-          className={classNames('row g-3', { 'was-validated': validated })}
+          className={cn('row g-3', { 'was-validated': validated })}
           ref={this.formRef}
           onSubmit={this.handleSubmit}
           noValidate={true}
@@ -236,7 +240,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             />
             {this.errorElements('birthdate')}
           </div>
-          <div className="col-xxl-8 col-md-12 col-6">
+          <div className="col-md-12 col-6">
             <label htmlFor="inputCity" className="form-label">
               City
             </label>
@@ -249,7 +253,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
             />
             {this.errorElements('city')}
           </div>
-          <div className="col-xxl-4 col-md-12 col-6">
+          <div className="col-md-12 col-6">
             <label htmlFor="inputZip" className="form-label">
               Zip
             </label>
@@ -324,7 +328,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
                 defaultChecked
               />
               <label className="form-check-label" htmlFor="gridCheck">
-                I agree with the fact that my data will be displayed below somewhere on this page
+                I agree with the fact that my data will be displayed somewhere on this page
               </label>
             </div>
           </div>
