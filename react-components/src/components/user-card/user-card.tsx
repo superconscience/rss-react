@@ -12,7 +12,7 @@ export class UserCard extends Component<UserCardProps> {
 
     return (
       <div className="card">
-        <img src={image} className="card-img-top" alt={name} />
+        <img src={image} className="card-img-top" alt={name} style={{ maxHeight: 300 }} />
         <div className="card-body">
           <h3 className="card-title">
             <strong>
@@ -21,11 +21,17 @@ export class UserCard extends Component<UserCardProps> {
           </h3>
         </div>
         <ul className="list-group list-group-flush">
-          <li className="list-group-item">Email: {email}</li>
-          <li className="list-group-item">Birth date: {birthdate.toLocaleDateString()}</li>
-          <li className="list-group-item">Gender: {capitalize(gender)}</li>
           <li className="list-group-item">
-            Location: {city}, {state}, {zip}
+            <strong>Email :</strong> {email}
+          </li>
+          <li className="list-group-item">
+            <strong>Birth date :</strong> {birthdate.toLocaleDateString()}
+          </li>
+          <li className="list-group-item">
+            <strong>Gender :</strong> {capitalize(gender)}
+          </li>
+          <li className="list-group-item">
+            <strong>Location :</strong> {city}, {state}, {zip}
           </li>
         </ul>
       </div>

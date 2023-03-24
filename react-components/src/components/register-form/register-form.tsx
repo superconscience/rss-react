@@ -3,7 +3,7 @@ import { Component, FormEventHandler, RefObject, createRef } from 'react';
 import { Gender, User } from '../../models/user';
 import { UploadImage } from '../upload-image/upload-image';
 import { validation } from './validate';
-import { useUniqueId } from '../../utils/functions';
+import { useId } from '../../utils/functions';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -64,7 +64,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     this.formRef = createRef<HTMLFormElement>();
   }
 
-  useId = useUniqueId();
+  useId = useId();
 
   handleSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
     event.preventDefault();
@@ -180,7 +180,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
       throw Error('Wrong User');
     }
     return {
-      id: this.useId(),
+      id: useId(),
       name: name || '',
       lastName: lastName || '',
       email: email || '',

@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 export function humanizeNumber(num: number) {
   const exp10 = Math.floor(Math.log10(num));
   return exp10 < 3
@@ -24,9 +26,6 @@ export const readImage = (file: File, callback: (src: string) => void) => {
 
 export const capitalize = (value: string) => value.slice(0, 1).toUpperCase() + value.slice(1);
 
-export const useUniqueId: () => () => string = () => {
-  let id = 0;
-  return () => {
-    return (++id).toString();
-  };
+export const useId = (): string => {
+  return v4();
 };
