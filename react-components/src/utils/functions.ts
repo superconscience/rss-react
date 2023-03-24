@@ -9,3 +9,15 @@ export function humanizeNumber(num: number) {
           .replace('kk', 'M')
           .replace('Mk', 'B');
 }
+
+export const readImage = (file: File, callback: (src: string) => void) => {
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    if (e.target) {
+      callback(e.target.result as string);
+    }
+  };
+
+  reader.readAsDataURL(file);
+};

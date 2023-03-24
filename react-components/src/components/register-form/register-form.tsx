@@ -1,14 +1,17 @@
-import { Component, FormEventHandler, RefObject, createRef } from 'react';
+import { ChangeEvent, Component, FormEventHandler, RefObject, createRef } from 'react';
 import './register-form.scss';
 import { Gender, User } from '../../models/user';
 import classNames from 'classnames';
 import { EMAIL_REGEXP } from '../../utils/constants';
+import { readImage } from '../../utils/functions';
+import { UploadImage } from '../upload-image/upload-image';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
 };
 
 export type RegisterFormComponentState = {
+  image: string | null;
   validated: boolean;
   submitted: boolean;
   errors: FormErrors;
@@ -168,6 +171,7 @@ const validation: Record<
 };
 
 const RegisterFormInitialState: RegisterFormComponentState = {
+  image: null,
   validated: false,
   submitted: false,
   errors: {
@@ -216,6 +220,23 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     if (isValid) {
       const newUser = this.extractUser(formData);
       this.props.addUser(newUser);
+    }
+  };
+
+  setImage = (src: string | null) => {
+    this.setState({ image: src });
+  };
+
+  onImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files?.length) {
+      const file = event.target.files[0];
+      if (file.size) {
+        readImage(file, (src) => {
+          this.setState({ image: src });
+        });
+      }
+    } else {
+      this.setState({ image: null });
     }
   };
 
@@ -302,7 +323,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
   };
 
   render() {
-    const { validated } = this.state;
+    const { validated, image } = this.state;
     return (
       <div className="row align-items-start">
         <div>
@@ -411,11 +432,9 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
           </div>
 
           <div className="col-12">
-            <label htmlFor="formFile" className="form-label">
-              Upload Image
-            </label>
-            <input className="form-control" type="file" id="formFile" name="image" />
+            <UploadImage name="image" setImage={this.setImage} />
             {this.errorElements('image')}
+            {image && <img src={image} alt={'image'} width="100%" className="mt-3" />}
           </div>
           <div className="col-12">
             <label className="form-label">Gender</label>
