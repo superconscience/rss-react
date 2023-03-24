@@ -7,6 +7,7 @@ import { getRandomId } from '../../utils/functions';
 import { TextInput } from '../ui/input/text-input';
 import { Select } from '../ui/select/select';
 import { RadioInput } from '../ui/radio/radio';
+import { CheckboxInput } from '../ui/checkbox/checkbox';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -320,16 +321,11 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
           </div>
           <div className="col-12">
             <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="gridCheck"
+              <CheckboxInput
+                label="I agree with the fact that my data will be displayed somewhere on this page"
                 name="agree"
-                defaultChecked
+                ref={this.agreeRef}
               />
-              <label className="form-check-label" htmlFor="gridCheck">
-                I agree with the fact that my data will be displayed somewhere on this page
-              </label>
             </div>
           </div>
           <div className="col-12">

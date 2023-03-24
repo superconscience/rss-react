@@ -1,17 +1,11 @@
 import cn from 'classnames';
-import { DetailedHTMLProps, InputHTMLAttributes, LabelHTMLAttributes, forwardRef } from 'react';
-import { OmitOnly } from '../../../types/utils';
+import { forwardRef } from 'react';
 import { getRandomId } from '../../../utils/functions';
+import { DefaultLabelProps, DefaultTextInputProps } from '../common';
 
 export type TextInputProps = {
-  inputProps?: OmitOnly<
-    DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    'id' | 'name'
-  >;
-  labelProps?: OmitOnly<
-    DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
-    'htmlFor'
-  >;
+  inputProps?: DefaultTextInputProps;
+  labelProps?: DefaultLabelProps;
   name: string;
   label: string;
 };

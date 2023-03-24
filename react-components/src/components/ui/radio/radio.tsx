@@ -1,16 +1,10 @@
-import { DetailedHTMLProps, InputHTMLAttributes, LabelHTMLAttributes, forwardRef } from 'react';
-import { OmitOnly } from '../../../types/utils';
+import { forwardRef } from 'react';
 import { getRandomId } from '../../../utils/functions';
+import { DefaultLabelProps, DefaultRadioProps } from '../common';
 
 export type RadioInputProps = {
-  inputProps?: OmitOnly<
-    DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    'id' | 'name' | 'type' | 'value'
-  >;
-  labelProps?: OmitOnly<
-    DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
-    'htmlFor'
-  >;
+  inputProps?: DefaultRadioProps;
+  labelProps?: DefaultLabelProps;
   name: string;
   label: string;
   value: string;
@@ -18,7 +12,7 @@ export type RadioInputProps = {
 
 export const RadioInput = forwardRef<HTMLInputElement, RadioInputProps>(
   ({ label, name, value, inputProps, labelProps }, ref) => {
-    const id = `radioInput-${getRandomId()}`;
+    const id = `radio-${getRandomId()}`;
     return (
       <>
         <input

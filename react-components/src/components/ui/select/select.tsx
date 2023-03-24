@@ -1,29 +1,16 @@
 import cn from 'classnames';
-import {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  LabelHTMLAttributes,
-  PropsWithChildren,
-  SelectHTMLAttributes,
-  forwardRef,
-} from 'react';
-import { OmitOnly } from '../../../types/utils';
+import { PropsWithChildren, forwardRef } from 'react';
 import { getRandomId } from '../../../utils/functions';
+import { DefaultLabelProps, DefaultSelectProps } from '../common';
 
-export type TextInputProps = {
-  selectProps?: OmitOnly<
-    DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>,
-    'id' | 'name'
-  >;
-  labelProps?: OmitOnly<
-    DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
-    'htmlFor'
-  >;
+export type SelectProps = {
+  selectProps?: DefaultSelectProps;
+  labelProps?: DefaultLabelProps;
   name: string;
   label: string;
 };
 
-export const Select = forwardRef<HTMLSelectElement, PropsWithChildren<TextInputProps>>(
+export const Select = forwardRef<HTMLSelectElement, PropsWithChildren<SelectProps>>(
   ({ label, name, labelProps, selectProps, children }, ref) => {
     const id = `select-${getRandomId()}`;
     return (
@@ -39,13 +26,6 @@ export const Select = forwardRef<HTMLSelectElement, PropsWithChildren<TextInputP
           name={name}
         >
           {children}
-          {/* <option value={0} style={{ display: 'none' }}>
-            Choose state...
-          </option>
-          <option>Japan</option>
-          <option>USA</option>
-          <option>Italy</option>
-          <option>Latvia</option> */}
         </select>
       </>
     );
