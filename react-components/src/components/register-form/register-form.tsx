@@ -3,7 +3,7 @@ import { Component, FormEventHandler, RefObject, createRef } from 'react';
 import { User } from '../../models/user';
 import { getRandomId } from '../../utils/functions';
 import { CheckboxInput } from '../ui/checkbox/checkbox';
-import { AllInputProps, AllSelectProps, ValidClassName } from '../ui/common';
+import { ValidClassName } from '../ui/common';
 import { TextInput } from '../ui/input/text-input';
 import { RadioInput } from '../ui/radio/radio';
 import { Select } from '../ui/select/select';
@@ -14,22 +14,12 @@ export type RegisterFormProps = {
   addUser: (user: User) => void;
 };
 
-type GetElementValueType<
-  K extends keyof RegisterFormElements,
-  E = RegisterFormElements[K]
-> = E extends HTMLInputElement
-  ? AllInputProps['value']
-  : E extends HTMLSelectElement
-  ? AllSelectProps['value']
-  : never;
-
 type KeysForRefs = Exclude<keyof RegisterFormElements, 'gender'> | 'genderMale' | 'genderFemale';
 
 export type RegisterFormComponentState = {
   image: string | null;
   validated: boolean;
   errors: FormErrors;
-  values: { [K in keyof RegisterFormElements]: GetElementValueType<K> };
 };
 
 export type RegisterFormElements = {
@@ -61,18 +51,6 @@ const registerFormInitialState: RegisterFormComponentState = {
     zip: [],
     gender: [],
     agree: [],
-  },
-  values: {
-    name: undefined,
-    lastName: undefined,
-    email: undefined,
-    birthdate: undefined,
-    state: undefined,
-    city: undefined,
-    image: undefined,
-    zip: undefined,
-    gender: undefined,
-    agree: undefined,
   },
 };
 
@@ -177,7 +155,6 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     this.formRef.current?.reset();
     this.setImage(null);
     this.setState({
-      values: { ...registerFormInitialState.values },
       errors: { ...registerFormInitialState.errors },
       validated: false,
     });
