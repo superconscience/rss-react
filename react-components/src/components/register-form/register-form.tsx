@@ -1,10 +1,8 @@
-import { ChangeEvent, Component, FormEventHandler, RefObject, createRef } from 'react';
-import './register-form.scss';
-import { Gender, User } from '../../models/user';
 import classNames from 'classnames';
-import { EMAIL_REGEXP } from '../../utils/constants';
-import { readImage } from '../../utils/functions';
+import { Component, FormEventHandler, RefObject, createRef } from 'react';
+import { Gender, User } from '../../models/user';
 import { UploadImage } from '../upload-image/upload-image';
+import { validation } from './validate';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
@@ -19,7 +17,7 @@ export type RegisterFormComponentState = {
 
 type FormStateData<T> = { value: T };
 
-type FormState = {
+export type RegisterFormState = {
   name: FormStateData<string>;
   lastName: FormStateData<string>;
   email: FormStateData<string>;
@@ -32,143 +30,7 @@ type FormState = {
   agree: FormStateData<boolean>;
 };
 
-type FormErrors = Record<keyof FormState, string[]>;
-
-type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-
-type ValidateFunc = (value: string | boolean | File | null) => ValidationResult;
-
-type ValidationResult = { isValid: true } | { isValid: false; messages: string[] };
-
-const createValidationResult = (messages: string[]): ValidationResult =>
-  messages.length > 0 ? { isValid: false, messages } : { isValid: true };
-
-const validateNameFunc: (name: string) => ValidateFunc = (name) => (value) => {
-  const messages: string[] = [];
-  if (typeof value !== 'string') {
-    throw Error(`${name} input should have a text type`);
-  }
-  if (!value.trim()) {
-    messages.push(`${name} is required`);
-  }
-  if (!value[0]) {
-    messages.push(`${name} should not start with empty space`);
-  }
-  if (value[0] && value[0] === value[0].toLowerCase()) {
-    messages.push(`${name} should start with an uppercase letter`);
-  }
-  return createValidationResult(messages);
-};
-
-const validation: Record<
-  keyof FormState,
-  {
-    validate: ValidateFunc;
-  }
-> = {
-  email: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (typeof value !== 'string') {
-        throw Error('Email input should have a text or email type');
-      }
-      if (!EMAIL_REGEXP.test(value.toLowerCase())) {
-        messages.push('Invalid email');
-      }
-      return createValidationResult(messages);
-    },
-  },
-  name: {
-    validate: validateNameFunc('Name'),
-  },
-  lastName: {
-    validate: validateNameFunc('Last Name'),
-  },
-  birthdate: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (!value) {
-        messages.push(`Birth Date is required`);
-      }
-      return createValidationResult(messages);
-    },
-  },
-  city: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (typeof value !== 'string') {
-        throw Error(`City input should have a text type`);
-      }
-      if (!value.trim()) {
-        messages.push(`City is required`);
-      }
-      return createValidationResult(messages);
-    },
-  },
-  state: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (typeof value !== 'string') {
-        throw Error(`State input should have a text type`);
-      }
-      if (value === '0') {
-        messages.push(`State is required`);
-      }
-      return createValidationResult(messages);
-    },
-  },
-  zip: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (typeof value !== 'string') {
-        throw Error(`Zip input should have a text or number type`);
-      }
-      if (!value.trim()) {
-        messages.push(`Zip is required`);
-      }
-      if (Number(value).toString() !== value) {
-        messages.push('Zip must be a number');
-      }
-      if (value.trim().length !== 5) {
-        messages.push('Zip must be 5 characters long');
-      }
-      return createValidationResult(messages);
-    },
-  },
-  image: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (!(value instanceof File)) {
-        throw Error(`Image input should have a file type`);
-      }
-      if (!value.name) {
-        messages.push(`Image is required`);
-      }
-      return createValidationResult(messages);
-    },
-  },
-  gender: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (value != null && typeof value !== 'string') {
-        throw Error(`Gender input should have a text or number type`);
-      }
-      if (value == null || !value.trim()) {
-        messages.push(`Gender is required`);
-      }
-      return createValidationResult(messages);
-    },
-  },
-  agree: {
-    validate: (value) => {
-      const messages: string[] = [];
-      if (value !== 'on') {
-        messages.push('Error');
-      }
-      return createValidationResult(messages);
-    },
-  },
-};
+type FormErrors = Record<keyof RegisterFormState, string[]>;
 
 const RegisterFormInitialState: RegisterFormComponentState = {
   image: null,
@@ -227,25 +89,12 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     this.setState({ image: src });
   };
 
-  onImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
-      const file = event.target.files[0];
-      if (file.size) {
-        readImage(file, (src) => {
-          this.setState({ image: src });
-        });
-      }
-    } else {
-      this.setState({ image: null });
-    }
-  };
-
   validate = (formData: FormData): FormErrors => {
     const errors = { ...RegisterFormInitialState.errors };
     Object.entries(validation).forEach(([name, { validate }]) => {
       const result = validate(formData.get(name) as string | boolean | File);
       if (!result.isValid) {
-        errors[name as keyof FormState] = result.messages;
+        errors[name as keyof RegisterFormState] = result.messages;
       }
     });
     return errors;
@@ -286,7 +135,6 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     const image = formData.get('image') as File;
     const gender = formData.get('gender') as string;
     const zip = formData.get('zip') as string;
-    console.log(image);
     if (
       [name, lastName, email, birthdate, state, city, gender, zip].some(
         (value) => typeof value !== 'string'
@@ -302,13 +150,13 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
       birthdate: new Date(birthdate),
       state: state || '',
       city: city || '',
-      image: '',
+      image: this.state.image || '',
       gender: (gender as Gender) || '',
       zip: Number(zip),
     };
   };
 
-  errorElements = (name: keyof FormState) => {
+  errorElements = (name: keyof RegisterFormState) => {
     const { errors } = this.state;
     const messages = errors[name];
     return (
