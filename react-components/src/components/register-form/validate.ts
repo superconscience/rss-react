@@ -73,10 +73,10 @@ export const validation: Record<
   state: {
     validate: (value) => {
       const messages: string[] = [];
-      if (typeof value !== 'string') {
+      if (typeof value !== 'string' && value !== null) {
         throw Error(`State input should have a text type`);
       }
-      if (value === '0') {
+      if (value === '0' || value === null) {
         messages.push(`State is required`);
       }
       return createValidationResult(messages);

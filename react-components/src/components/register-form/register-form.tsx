@@ -33,7 +33,7 @@ export type RegisterFormState = {
 
 type FormErrors = Record<keyof RegisterFormState, string[]>;
 
-const RegisterFormInitialState: RegisterFormComponentState = {
+const registerFormInitialState: RegisterFormComponentState = {
   image: null,
   validated: false,
   submitted: false,
@@ -57,7 +57,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
   };
 
   formRef: RefObject<HTMLFormElement>;
-  state: RegisterFormComponentState = RegisterFormInitialState;
+  state: RegisterFormComponentState = registerFormInitialState;
 
   constructor(props: RegisterFormProps) {
     super(props);
@@ -85,6 +85,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     if (isValid) {
       const newUser = this.extractUser(formData);
       this.props.addUser(newUser);
+      this.resetForm();
     }
   };
 
@@ -93,7 +94,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
   };
 
   validate = (formData: FormData): FormErrors => {
-    const errors = { ...RegisterFormInitialState.errors };
+    const errors = { ...registerFormInitialState.errors };
     Object.entries(validation).forEach(([name, { validate }]) => {
       const result = validate(formData.get(name) as string | boolean | File);
       if (!result.isValid) {
@@ -103,26 +104,58 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     return errors;
   };
 
+  setCustomValidity = (element: Element | RadioNodeList | null, validity: string) => {
+    if (element instanceof RadioNodeList) {
+      element.forEach((radio) => (radio as HTMLInputElement).setCustomValidity(validity));
+    } else if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+      element.setCustomValidity(validity);
+    }
+  };
+
   setFormValidity = (errors: FormErrors): void => {
     const form = this.formRef.current;
-    const setCustomValidity = (element: Element | RadioNodeList | null, validity: string) => {
-      if (element instanceof RadioNodeList) {
-        element.forEach((radio) => (radio as HTMLInputElement).setCustomValidity(validity));
-      } else if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-        element.setCustomValidity(validity);
-      }
-    };
     if (!form) {
       return;
     }
     Object.entries(errors).forEach(([name, messages]) => {
       const element = form.elements.namedItem(name);
       if (messages.length > 0) {
-        setCustomValidity(element, 'invalid');
+        this.setCustomValidity(element, 'invalid');
       } else {
-        setCustomValidity(element, '');
+        this.setCustomValidity(element, '');
       }
     });
+  };
+
+  resetForm = () => {
+    const form = this.formRef.current;
+    if (form) {
+      [...form.elements].forEach((element) => {
+        this.resetFormElement(element);
+        this.setCustomValidity(element, '');
+      });
+      this.setState({ errors: { ...registerFormInitialState.errors }, validated: false });
+    }
+  };
+
+  resetFormElement = (element: unknown) => {
+    if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+      if (element instanceof HTMLInputElement) {
+        if (element.type === 'file') {
+          element.files = null;
+          this.setImage(null);
+          element.value = '';
+        } else if (element.type === 'checkbox') {
+          element.checked = false;
+        } else {
+          element.value = '';
+        }
+      } else {
+        element.value = '';
+      }
+    } else if (element instanceof RadioNodeList) {
+      element.forEach((radio) => ((radio as HTMLInputElement).checked = false));
+    }
   };
 
   hasErrors = (errors: FormErrors): boolean =>
