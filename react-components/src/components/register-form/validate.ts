@@ -5,10 +5,10 @@ type ValidateFunc = (value: string | boolean | File | null) => ValidationResult;
 
 export type ValidationResult = { isValid: true } | { isValid: false; messages: string[] };
 
-const createValidationResult = (messages: string[]): ValidationResult =>
+export const createValidationResult = (messages: string[]): ValidationResult =>
   messages.length > 0 ? { isValid: false, messages } : { isValid: true };
 
-const validateNameFunc: (name: string) => ValidateFunc = (name) => (value) => {
+export const validateNameFunc: (name: string) => ValidateFunc = (name) => (value) => {
   const messages: string[] = [];
   if (typeof value !== 'string') {
     throw Error(`${name} input should have a text type`);
@@ -16,7 +16,7 @@ const validateNameFunc: (name: string) => ValidateFunc = (name) => (value) => {
   if (!value.trim()) {
     messages.push(`${name} is required`);
   }
-  if (!value[0]) {
+  if (value[0] === ' ') {
     messages.push(`${name} should not start with empty space`);
   }
   if (value[0] && value[0] === value[0].toLowerCase()) {
@@ -37,7 +37,10 @@ export const validation: Record<
       if (typeof value !== 'string') {
         throw Error('Email input should have a text or email type');
       }
-      if (!EMAIL_REGEXP.test(value.toLowerCase())) {
+      if (!value) {
+        messages.push(`Email is required`);
+      }
+      if (value && !EMAIL_REGEXP.test(value.toLowerCase())) {
         messages.push('Invalid email');
       }
       return createValidationResult(messages);
@@ -103,7 +106,7 @@ export const validation: Record<
   image: {
     validate: (value) => {
       const messages: string[] = [];
-      if (!(value instanceof File) && value != null) {
+      if (!(value instanceof File) && value !== null) {
         throw Error(`Image input should have a file type`);
       }
       if (value == null || !value.name) {
@@ -115,10 +118,10 @@ export const validation: Record<
   gender: {
     validate: (value) => {
       const messages: string[] = [];
-      if (value != null && typeof value !== 'string') {
+      if (value !== null && typeof value !== 'string') {
         throw Error(`Gender input should have a text or number type`);
       }
-      if (value == null || !value.trim()) {
+      if (value === null || !value.trim()) {
         messages.push(`Gender is required`);
       }
       return createValidationResult(messages);

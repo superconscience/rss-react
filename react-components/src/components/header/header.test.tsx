@@ -10,6 +10,6 @@ describe('Header', async () => {
 
     const links = await findAllByRole('link');
 
-    expect(links).toHaveLength(2);
+    expect(links).toHaveLength(3);
   });
 });
