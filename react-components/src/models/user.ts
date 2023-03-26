@@ -17,12 +17,12 @@ export type Gender = 'male' | 'female';
 
 export const fakeUser: User = {
   id: '444',
-  name: 'Test',
-  lastName: 'Tester',
+  name: 'Name',
+  lastName: 'Lastname',
   email: 'aaa@aaa.cc',
   birthdate: new Date(),
   city: 'City',
-  state: 'state',
+  state: 'State',
   gender: 'male',
   zip: 44444,
   image: fakeImage,
