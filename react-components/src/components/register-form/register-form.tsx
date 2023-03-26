@@ -12,6 +12,7 @@ import { ValidationResult, validation } from './validate';
 
 export type RegisterFormProps = {
   addUser: (user: User) => void;
+  showAlert: () => void;
 };
 
 type KeysForRefs = Exclude<keyof RegisterFormElements, 'gender'> | 'genderMale' | 'genderFemale';
@@ -107,6 +108,7 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
     if (isValid) {
       const newUser = this.extractUser();
       this.props.addUser(newUser);
+      this.props.showAlert();
       this.resetForm();
     }
   };
@@ -207,144 +209,146 @@ export class RegisterForm extends Component<RegisterFormProps, RegisterFormCompo
   render() {
     const { validated, image } = this.state;
     return (
-      <div className="row align-items-start">
-        <div>
-          <h2>Add User</h2>
+      <>
+        <div className="row align-items-start border-end">
+          <div>
+            <h2>Add User</h2>
+          </div>
+
+          <form
+            className={cn('row g-3', { 'was-validated': validated })}
+            ref={this.formRef}
+            onSubmit={this.handleSubmit}
+            noValidate={true}
+          >
+            <div className="col-md-12 col-sm-6 col-6">
+              <TextInput
+                label="Name"
+                name="name"
+                ref={this.formElementsRefs.name}
+                validClassName={this.getValidationResultClassName('name')}
+              />
+              {this.errorElements('name')}
+            </div>
+            <div className="col-md-12 col-sm-6 col-6">
+              <TextInput
+                label="Last Name"
+                name="lastName"
+                ref={this.formElementsRefs.lastName}
+                validClassName={this.getValidationResultClassName('lastName')}
+              />
+              {this.errorElements('lastName')}
+            </div>
+            <div className="col-md-12 col-sm-6 col-6">
+              <TextInput
+                label="Email"
+                name="email"
+                ref={this.formElementsRefs.email}
+                inputProps={{ type: 'email' }}
+                validClassName={this.getValidationResultClassName('email')}
+              />
+              {this.errorElements('email')}
+            </div>
+            <div className="col-md-12 col-sm-6 col-6">
+              <TextInput
+                label="Birth Date"
+                name="birthdate"
+                ref={this.formElementsRefs.birthdate}
+                inputProps={{ type: 'date' }}
+                validClassName={this.getValidationResultClassName('birthdate')}
+              />
+              {this.errorElements('birthdate')}
+            </div>
+            <div className="col-md-12 col-6">
+              <TextInput
+                label="City"
+                name="city"
+                ref={this.formElementsRefs.city}
+                validClassName={this.getValidationResultClassName('city')}
+              />
+              {this.errorElements('city')}
+            </div>
+            <div className="col-md-12 col-6">
+              <TextInput
+                label="Zip"
+                name="zip"
+                ref={this.formElementsRefs.zip}
+                inputProps={{ maxLength: 5 }}
+                validClassName={this.getValidationResultClassName('zip')}
+              />
+              {this.errorElements('zip')}
+            </div>
+            <div className="col-12">
+              <Select
+                label="State"
+                name="state"
+                ref={this.formElementsRefs.state}
+                validClassName={this.getValidationResultClassName('state')}
+              >
+                <option value={0} style={{ display: 'none' }}>
+                  Choose state...
+                </option>
+                <option>Japan</option>
+                <option>USA</option>
+                <option>Italy</option>
+                <option>Latvia</option>
+              </Select>
+              {this.errorElements('state')}
+            </div>
+
+            <div className="col-12">
+              <UploadImage
+                name="image"
+                setImage={this.setImage}
+                ref={this.formElementsRefs.image}
+                validClassName={this.getValidationResultClassName('image')}
+              />
+              {this.errorElements('image')}
+              {image && <img src={image} alt={'image'} width="100%" className="mt-3" />}
+            </div>
+            <div className="col-12">
+              <label className="form-label">Gender</label>
+              <div>
+                <RadioInput
+                  label="Male"
+                  name="gender"
+                  value="male"
+                  ref={this.formElementsRefs.genderMale}
+                  labelProps={{ className: 'btn' }}
+                  inputProps={{ className: 'btn-check' }}
+                  validClassName={this.getValidationResultClassName('gender')}
+                  checked
+                />
+                <RadioInput
+                  label="Female"
+                  name="gender"
+                  value="female"
+                  ref={this.formElementsRefs.genderFemale}
+                  labelProps={{ className: 'btn' }}
+                  inputProps={{ className: 'btn-check' }}
+                  validClassName={this.getValidationResultClassName('gender')}
+                />
+                {this.errorElements('gender')}
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="form-check">
+                <CheckboxInput
+                  label="I agree with the fact that my data will be displayed somewhere on this page"
+                  name="agree"
+                  ref={this.formElementsRefs.agree}
+                  validClassName={this.getValidationResultClassName('agree')}
+                />
+              </div>
+            </div>
+            <div className="col-12">
+              <button type="submit" className="btn btn-primary">
+                Register
+              </button>
+            </div>
+          </form>
         </div>
-
-        <form
-          className={cn('row g-3', { 'was-validated': validated })}
-          ref={this.formRef}
-          onSubmit={this.handleSubmit}
-          noValidate={true}
-        >
-          <div className="col-md-12 col-sm-6 col-6">
-            <TextInput
-              label="Name"
-              name="name"
-              ref={this.formElementsRefs.name}
-              validClassName={this.getValidationResultClassName('name')}
-            />
-            {this.errorElements('name')}
-          </div>
-          <div className="col-md-12 col-sm-6 col-6">
-            <TextInput
-              label="Last Name"
-              name="lastName"
-              ref={this.formElementsRefs.lastName}
-              validClassName={this.getValidationResultClassName('lastName')}
-            />
-            {this.errorElements('lastName')}
-          </div>
-          <div className="col-md-12 col-sm-6 col-6">
-            <TextInput
-              label="Email"
-              name="email"
-              ref={this.formElementsRefs.email}
-              inputProps={{ type: 'email' }}
-              validClassName={this.getValidationResultClassName('email')}
-            />
-            {this.errorElements('email')}
-          </div>
-          <div className="col-md-12 col-sm-6 col-6">
-            <TextInput
-              label="Birth Date"
-              name="birthdate"
-              ref={this.formElementsRefs.birthdate}
-              inputProps={{ type: 'date' }}
-              validClassName={this.getValidationResultClassName('birthdate')}
-            />
-            {this.errorElements('birthdate')}
-          </div>
-          <div className="col-md-12 col-6">
-            <TextInput
-              label="City"
-              name="city"
-              ref={this.formElementsRefs.city}
-              validClassName={this.getValidationResultClassName('city')}
-            />
-            {this.errorElements('city')}
-          </div>
-          <div className="col-md-12 col-6">
-            <TextInput
-              label="Zip"
-              name="zip"
-              ref={this.formElementsRefs.zip}
-              inputProps={{ maxLength: 5 }}
-              validClassName={this.getValidationResultClassName('zip')}
-            />
-            {this.errorElements('zip')}
-          </div>
-          <div className="col-12">
-            <Select
-              label="State"
-              name="state"
-              ref={this.formElementsRefs.state}
-              validClassName={this.getValidationResultClassName('state')}
-            >
-              <option value={0} style={{ display: 'none' }}>
-                Choose state...
-              </option>
-              <option>Japan</option>
-              <option>USA</option>
-              <option>Italy</option>
-              <option>Latvia</option>
-            </Select>
-            {this.errorElements('state')}
-          </div>
-
-          <div className="col-12">
-            <UploadImage
-              name="image"
-              setImage={this.setImage}
-              ref={this.formElementsRefs.image}
-              validClassName={this.getValidationResultClassName('image')}
-            />
-            {this.errorElements('image')}
-            {image && <img src={image} alt={'image'} width="100%" className="mt-3" />}
-          </div>
-          <div className="col-12">
-            <label className="form-label">Gender</label>
-            <div>
-              <RadioInput
-                label="Male"
-                name="gender"
-                value="male"
-                ref={this.formElementsRefs.genderMale}
-                labelProps={{ className: 'btn' }}
-                inputProps={{ className: 'btn-check' }}
-                validClassName={this.getValidationResultClassName('gender')}
-                checked
-              />
-              <RadioInput
-                label="Female"
-                name="gender"
-                value="female"
-                ref={this.formElementsRefs.genderFemale}
-                labelProps={{ className: 'btn' }}
-                inputProps={{ className: 'btn-check' }}
-                validClassName={this.getValidationResultClassName('gender')}
-              />
-              {this.errorElements('gender')}
-            </div>
-          </div>
-          <div className="col-12">
-            <div className="form-check">
-              <CheckboxInput
-                label="I agree with the fact that my data will be displayed somewhere on this page"
-                name="agree"
-                ref={this.formElementsRefs.agree}
-                validClassName={this.getValidationResultClassName('agree')}
-              />
-            </div>
-          </div>
-          <div className="col-12">
-            <button type="submit" className="btn btn-primary">
-              Register
-            </button>
-          </div>
-        </form>
-      </div>
+      </>
     );
   }
 }
