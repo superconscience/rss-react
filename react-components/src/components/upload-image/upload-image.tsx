@@ -30,6 +30,7 @@ export const UploadImage = forwardRef<HTMLInputElement, UploadImageProps & Valid
           Upload Image
         </label>
         <input
+          data-testid="upload-image"
           ref={ref}
           accept="image/*"
           className={classNames('form-control', validClassName)}
