@@ -1,8 +1,6 @@
-import { Component, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import styles from './grid.module.scss';
 
-export class Grid extends Component<PropsWithChildren> {
-  render() {
-    return <ul className={styles.grid}>{this.props.children}</ul>;
-  }
-}
+export const Grid: FC<PropsWithChildren> = ({ children }) => (
+  <ul className={styles.grid}>{children}</ul>
+);
