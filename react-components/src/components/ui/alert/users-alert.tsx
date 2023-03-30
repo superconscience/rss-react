@@ -1,20 +1,16 @@
-import { Component } from 'react';
-import { PropsWithClassName } from '../../../types/types';
 import classNames from 'classnames';
+import { FC } from 'react';
+import { PropsWithClassName } from '../../../types/types';
 
 export type UsersAlertProps = PropsWithClassName & {
   onClose: () => void;
 };
 
-export class UsersAlert extends Component<UsersAlertProps> {
-  render() {
-    return (
-      <div className={classNames('alert alert-success w-100', this.props.className)} role="alert">
-        <span>
-          <strong>Success!</strong> User has been added
-        </span>
-        <button onClick={this.props.onClose} type="button" className="btn-close" />
-      </div>
-    );
-  }
-}
+export const UsersAlert: FC<UsersAlertProps> = ({ className, onClose }) => (
+  <div className={classNames('alert alert-success w-100', className)} role="alert">
+    <span>
+      <strong>Success!</strong> User has been added
+    </span>
+    <button onClick={onClose} type="button" className="btn-close" />
+  </div>
+);
