@@ -6,7 +6,7 @@ import classNames from 'classnames';
 export type RadioInputProps = {
   inputProps?: DefaultRadioProps;
   labelProps?: DefaultLabelProps;
-  name: string;
+  name?: string;
   label: string;
   value: string;
 };
@@ -21,13 +21,13 @@ export const RadioInput = forwardRef<
       <input
         ref={ref}
         type="radio"
-        {...inputProps}
         className={classNames(validClassName, inputProps?.className)}
         name={name}
         id={id}
         autoComplete="off"
         value={value}
         defaultChecked={checked}
+        {...inputProps}
       />
       <label {...labelProps} htmlFor={id}>
         {label}

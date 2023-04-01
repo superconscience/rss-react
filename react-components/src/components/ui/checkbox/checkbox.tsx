@@ -11,7 +11,7 @@ import {
 export type CheckboxInputProps = {
   inputProps?: DefaultCheckboxProps;
   labelProps?: DefaultLabelProps;
-  name: string;
+  name?: string;
   label: string;
 };
 
@@ -25,12 +25,12 @@ export const CheckboxInput = forwardRef<
       <input
         ref={ref}
         type="checkbox"
-        {...inputProps}
         className={classNames('form-check-input', validClassName, inputProps?.className)}
         name={name}
         id={id}
         autoComplete="off"
         defaultChecked={checked}
+        {...inputProps}
       />
       <label
         {...labelProps}

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-export type ViewsIconProps = { width: number; height: number; fill: string };
+export type ViewsIconProps = { width?: number; height?: number; fill?: string };
 
 export const ViewsIcon: FC<ViewsIconProps> = ({ width, height, fill }) => {
   return (

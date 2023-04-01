@@ -11,7 +11,7 @@ import {
 export type TextInputProps = {
   inputProps?: DefaultTextInputProps;
   labelProps?: DefaultLabelProps;
-  name: string;
+  name?: string;
   label: string;
 };
 
@@ -28,11 +28,11 @@ export const TextInput = forwardRef<
       <input
         ref={ref}
         type="text"
-        {...inputProps}
         className={cn('form-control', validClassName, inputProps?.className)}
         id={id}
         name={name}
         defaultValue={value}
+        {...inputProps}
       />
     </>
   );

@@ -29,13 +29,15 @@ export type SelectProps<K extends keyof AllSelectProps> = OmitOnly<AllSelectProp
 
 export type DefaultLabelProps = LabelProps<'htmlFor'>;
 
-export type DefaultTextInputProps = InputProps<'id' | 'name' | 'defaultValue'>;
+export type DefaultTextInputProps = InputProps<'id' | 'defaultValue'>;
 
-export type DefaultSelectProps = SelectProps<'id' | 'name' | 'defaultValue'>;
+export type DefaultSelectProps = SelectProps<'id'>;
 
-export type DefaultCheckboxProps = InputProps<'id' | 'name' | 'type' | 'defaultChecked'>;
+export type DefaultCheckboxProps = InputProps<'id' | 'type'>;
 
-export type DefaultRadioProps = InputProps<'id' | 'name' | 'type' | 'value' | 'defaultChecked'>;
+export type DefaultRadioProps = InputProps<'id' | 'type'>;
+
+export type DefaultFileInputProps = DefaultTextInputProps;
 
 export type ValidClassName = 'valid' | 'invalid';
 

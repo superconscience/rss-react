@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-export type LikeIconProps = { width: number; height: number; fill: string };
+export type LikeIconProps = { width?: number; height?: number; fill?: string };
 
 export const LikeIcon: FC<LikeIconProps> = ({ width, height, fill }) => {
   return (

@@ -11,7 +11,7 @@ import {
 export type SelectProps = {
   selectProps?: DefaultSelectProps;
   labelProps?: DefaultLabelProps;
-  name: string;
+  name?: string;
   label: string;
 };
 
@@ -27,11 +27,11 @@ export const Select = forwardRef<
       </label>
       <select
         ref={ref}
-        {...selectProps}
         className={cn('form-control', validClassName, selectProps?.className)}
         id={id}
         name={name}
         defaultValue={value}
+        {...selectProps}
       >
         {children}
       </select>
