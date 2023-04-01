@@ -1,4 +1,4 @@
-import { Component, PropsWithChildren, createContext } from 'react';
+import { FC, PropsWithChildren, createContext, useState } from 'react';
 import { User } from '../models/user';
 
 export type AppContextType = {
@@ -24,37 +24,31 @@ const initialState: AppContextType = {
 
 export const AppContext = createContext<AppContextType>(initialState);
 
-export class AppContextProvider extends Component<PropsWithChildren, AppContextState> {
-  state: AppContextState = {
-    users: [],
-    usersAlert: {
-      isOpen: false,
-    },
+export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
+  const addUser = (user: User): void => {
+    setUsers((prev) => [...prev, user]);
   };
-  addUser = (user: User): void => {
-    this.setState((prev) => ({ ...prev, users: [...prev.users, user] }));
+  const openUsersAlert = (): void => {
+    setIsAlertOpen(true);
   };
-  openUsersAlert = (): void => {
-    this.setState({ usersAlert: { isOpen: true } });
+  const closeUsersAlert = (): void => {
+    setIsAlertOpen(false);
   };
-  closeUsersAlert = (): void => {
-    this.setState({ usersAlert: { isOpen: false } });
-  };
-  render() {
-    return (
-      <AppContext.Provider
-        value={{
-          users: this.state.users,
-          addUser: this.addUser,
-          usersAlert: {
-            isOpen: this.state.usersAlert.isOpen,
-            open: this.openUsersAlert,
-            close: this.closeUsersAlert,
-          },
-        }}
-      >
-        {this.props.children}
-      </AppContext.Provider>
-    );
-  }
-}
+  return (
+    <AppContext.Provider
+      value={{
+        users: users,
+        addUser: addUser,
+        usersAlert: {
+          isOpen: isAlertOpen,
+          open: openUsersAlert,
+          close: closeUsersAlert,
+        },
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
