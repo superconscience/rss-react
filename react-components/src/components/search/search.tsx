@@ -1,5 +1,15 @@
 import cn from 'classnames';
-import { ChangeEvent, FC, InputHTMLAttributes, useCallback, useEffect, useState } from 'react';
+import {
+  ChangeEventHandler,
+  FC,
+  InputHTMLAttributes,
+  KeyboardEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import { BaseResponse } from '../../api/dummy-json.api';
+import { ProductService } from '../../services/product.service';
 import { PropsWithClassName } from '../../types/types';
 import { getTypedStorageItem, setTypedStorageItem } from '../../utils/localstorage';
 import styles from './search.module.scss';
@@ -8,12 +18,13 @@ export type SearchState = {
   search: string;
 };
 
-export type SearchProps = PropsWithClassName & InputHTMLAttributes<HTMLInputElement>;
+export type SearchProps = PropsWithClassName &
+  InputHTMLAttributes<HTMLInputElement> & { run: (promise: Promise<BaseResponse>) => void };
 
-export const Search: FC<SearchProps> = ({ className, ...props }) => {
+export const Search: FC<SearchProps> = ({ className, run, ...props }) => {
   const [search, setSearch] = useState<SearchState['search']>(getTypedStorageItem('search') || '');
 
-  const inputHandler = (event: ChangeEvent<HTMLInputElement>): void =>
+  const inputChangeHandler: ChangeEventHandler<HTMLInputElement> = (event) =>
     setSearch(event.target.value);
 
   const setInputValueToLocalstorage = useCallback(() => {
@@ -21,6 +32,12 @@ export const Search: FC<SearchProps> = ({ className, ...props }) => {
       setTypedStorageItem('search', search);
     }
   }, [search]);
+
+  const inputEnterKeyupHandler: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    if (event.key === 'Enter') {
+      run(ProductService.search(search));
+    }
+  };
 
   useEffect(() => {
     window.addEventListener('beforeunload', setInputValueToLocalstorage);
@@ -37,7 +54,8 @@ export const Search: FC<SearchProps> = ({ className, ...props }) => {
       placeholder="Search"
       {...props}
       value={search}
-      onChange={inputHandler}
+      onChange={inputChangeHandler}
+      onKeyUp={inputEnterKeyupHandler}
     />
   );
 };
