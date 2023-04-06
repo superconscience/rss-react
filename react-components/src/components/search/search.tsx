@@ -8,8 +8,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { BaseResponse } from '../../api/dummy-json.api';
-import { ProductService } from '../../services/product.service';
 import { PropsWithClassName } from '../../types/types';
 import { getTypedStorageItem, setTypedStorageItem } from '../../utils/localstorage';
 import styles from './search.module.scss';
@@ -19,9 +17,11 @@ export type SearchState = {
 };
 
 export type SearchProps = PropsWithClassName &
-  InputHTMLAttributes<HTMLInputElement> & { run: (promise: Promise<BaseResponse>) => void };
+  InputHTMLAttributes<HTMLInputElement> & {
+    onSearch: (search: string) => void;
+  };
 
-export const Search: FC<SearchProps> = ({ className, run, ...props }) => {
+export const Search: FC<SearchProps> = ({ className, onSearch, ...props }) => {
   const [search, setSearch] = useState<SearchState['search']>(getTypedStorageItem('search') || '');
 
   const inputChangeHandler: ChangeEventHandler<HTMLInputElement> = (event) =>
@@ -35,7 +35,7 @@ export const Search: FC<SearchProps> = ({ className, run, ...props }) => {
 
   const inputEnterKeyupHandler: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === 'Enter') {
-      run(ProductService.search(search));
+      onSearch(search);
     }
   };
 

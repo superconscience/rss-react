@@ -45,7 +45,7 @@ async function handleResponse<D>(response: Response) {
   const text = await response.text();
   const data = text && JSON.parse(text);
   if (!response.ok) {
-    const error = (data && data.message) || response.statusText;
+    const error = (data && data.message && Error(data.message)) || Error(response.statusText);
     return Promise.reject(error);
   }
   return data as D;
