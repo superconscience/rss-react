@@ -10,7 +10,7 @@ type TAction<D = unknown, E extends Error = Error> =
 
 type TState<D = unknown, E extends Error = Error> =
   | TIdleState
-  | TPendingState
+  | TPendingState<D>
   | TResolvedState<D>
   | TRejectedState<E>;
 
@@ -24,7 +24,7 @@ type TRejectedAction<E extends Error = Error> = { type: 'rejected'; error: E };
 
 type TIdleState = { status: 'idle'; data: null; error: null };
 
-type TPendingState = { status: 'pending'; data: null; error: null };
+type TPendingState<D> = { status: 'pending'; data: D | null; error: null };
 
 type TResolvedState<D = unknown> = { status: 'resolved'; data: D; error: null };
 
@@ -55,7 +55,7 @@ function asyncReducer<D = unknown, E extends Error = Error>(
       return { status: 'idle', data: null, error: null };
     }
     case 'pending': {
-      return { status: 'pending', data: null, error: null };
+      return { status: 'pending', data: state.data || null, error: null };
     }
     case 'resolved': {
       return { status: 'resolved', data: action.data, error: null };

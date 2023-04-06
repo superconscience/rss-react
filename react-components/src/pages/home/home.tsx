@@ -1,26 +1,17 @@
-import {
-  FC,
-  ReactEventHandler,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FC, ReactEventHandler, useCallback, useEffect } from 'react';
 import { BaseResponse } from '../../api/dummy-json.api';
 import { Grid } from '../../components/grid/grid';
+import { ProductDetails } from '../../components/product-card-details/product-details';
 import { ProductCard } from '../../components/product-card/product-card';
 import { Search } from '../../components/search/search';
 import { Container } from '../../components/ui/container/container';
 import { LoadingSpinner } from '../../components/ui/loading-spinner/loading-spinner';
+import { Modal } from '../../components/ui/modal/modal';
 import { useAsync } from '../../hooks/use-async';
+import useModal from '../../hooks/use-modal';
+import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import styles from './home.module.scss';
-import useModal from '../../hooks/use-modal';
-import { Modal } from '../../components/ui/modal/modal';
-import { Product } from '../../models/product';
-import { ProductDetails } from '../../components/product-card-details/product-details';
-import classNames from 'classnames';
 
 export const Home: FC = () => {
   const {
@@ -40,14 +31,9 @@ export const Home: FC = () => {
 
   const { isOpen: isModalOpen, toggle: toggleModalDefault } = useModal();
 
-  const [containerTop, setContainerTop] = useState<number>();
-
   const hasData = searchData && searchData.products.length > 0;
 
-  const cardsContainerRef = useRef<HTMLDivElement>(null);
-
-  const spinnerContainerStyle =
-    containerTop !== undefined ? { height: `calc(98vh - ${containerTop}px)` } : {};
+  const renderSpinner = () => <LoadingSpinner className={styles['spinner-container']} />;
 
   const search = useCallback(
     (value: string) => {
@@ -80,13 +66,6 @@ export const Home: FC = () => {
     [resetProduct, toggleModalDefault]
   );
 
-  useLayoutEffect(() => {
-    const container = cardsContainerRef.current;
-    if (container) {
-      setContainerTop(container.getBoundingClientRect().top);
-    }
-  }, []);
-
   useEffect(() => {
     search('');
   }, [search]);
@@ -103,7 +82,7 @@ export const Home: FC = () => {
         <div className={styles['search-wrapper']}>
           <Search onSearch={onSearch} />
         </div>
-        <div className={styles['cards-wrapper']} ref={cardsContainerRef}>
+        <div className={styles['cards-wrapper']}>
           {hasData && (
             <Grid>
               {hasData &&
@@ -115,9 +94,7 @@ export const Home: FC = () => {
           {searchStatus === 'resolved' && searchData?.products.length === 0 && (
             <p>Sorry, no items found 😩</p>
           )}
-          {searchStatus === 'pending' && (
-            <LoadingSpinner className={styles['spinner-container']} style={spinnerContainerStyle} />
-          )}
+          {searchStatus === 'pending' && renderSpinner()}
           {searchStatus === 'rejected' && searchError && (
             <div className="alert alert-danger">
               <span>
@@ -125,9 +102,7 @@ export const Home: FC = () => {
               </span>
             </div>
           )}
-          {productStatus === 'pending' && (
-            <LoadingSpinner className={classNames(styles['spinner-container'], styles['single'])} />
-          )}
+          {productStatus === 'pending' && renderSpinner()}
         </div>
       </Container>
       <Modal isOpen={isModalOpen} toggle={toggleModal}>
