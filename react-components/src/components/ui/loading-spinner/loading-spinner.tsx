@@ -3,7 +3,7 @@ import styles from './loading-spinner.module.scss';
 import { PropsWithClassName } from '../../../types/types';
 
 export type LoadingSpinnerProps = PropsWithClassName & {
-  style: CSSProperties;
+  style?: CSSProperties;
 };
 
 export const LoadingSpinner: FC<LoadingSpinnerProps> = ({ className, style }) => {

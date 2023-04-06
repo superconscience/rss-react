@@ -81,8 +81,8 @@ function useAsync<D = unknown, E extends Error = Error, S = TState<D, E>>(initia
 
   const { data, error, status } = state;
 
-  const run = useCallback<(promise: Promise<D>) => void>(
-    (promise) => {
+  const run = useCallback<(promise: Promise<D>) => Promise<void>>(
+    async (promise) => {
       dispatch({ type: 'pending' });
       promise.then(
         (data) => {
@@ -98,10 +98,12 @@ function useAsync<D = unknown, E extends Error = Error, S = TState<D, E>>(initia
 
   const setData = useCallback((data: D) => dispatch({ type: 'resolved', data }), [dispatch]);
   const setError = useCallback((error: E) => dispatch({ type: 'rejected', error }), [dispatch]);
+  const reset = useCallback(() => dispatch({ type: 'idle' }), [dispatch]);
 
   return {
     setData,
     setError,
+    reset,
     error,
     status,
     data,

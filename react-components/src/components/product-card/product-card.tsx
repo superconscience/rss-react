@@ -1,23 +1,25 @@
-import { FC } from 'react';
+import { FC, HTMLAttributes } from 'react';
 import { Product } from '../../models/product';
 import { PropsWithClassName } from '../../types/types';
 import { formatPrice } from '../../utils/functions';
 import classNames from 'classnames';
 import styles from './product-card.module.scss';
 
-export type ProductCardProps = PropsWithClassName & { card: Product };
+export type ProductCardProps = PropsWithClassName & {
+  card: Product;
+} & Pick<HTMLAttributes<HTMLLIElement>, 'onClick'>;
 
 export type ProductCardState = {
   image: string | undefined;
 };
 
-export const ProductCard: FC<ProductCardProps> = ({ card, className }) => {
+export const ProductCard: FC<ProductCardProps> = ({ card, className, onClick }) => {
   const { title, price, thumbnail, stock } = card;
 
   const isAvailable = stock > 0;
 
   return (
-    <li className={classNames(styles['product-preview'], className)}>
+    <li className={classNames(styles['product-preview'], className)} onClick={onClick}>
       <div className={styles['product-item']}>
         <div
           className={styles['product-item__wrapper']}
