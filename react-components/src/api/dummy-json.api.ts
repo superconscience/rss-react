@@ -9,6 +9,7 @@ export type BaseResponse = {
 
 export const BASE_URL = 'https://dummyjson.com/products';
 
-export const getSearchUrl = (value: string) => `${BASE_URL}/search?q=${value}`;
+export const getSearchUrl = (value: string, limit: number) =>
+  `${BASE_URL}/search?q=${value}&limit=${limit}`;
 
 export const getSingleUrl = (id: number) => `${BASE_URL}/${id}`;
