@@ -1,5 +1,5 @@
 import { describe, it } from 'vitest';
-import { humanizeNumber } from './functions';
+import { capitalize, formatPrice, getRandomId, humanizeNumber } from './functions';
 
 describe('Utils Functions', () => {
   describe('humanizeNumber', () => {
@@ -15,6 +15,27 @@ describe('Utils Functions', () => {
       expect(humanizeNumber(999)).toEqual('999');
       expect(humanizeNumber(9999)).toEqual('10.0k');
       expect(humanizeNumber(99999)).toEqual('100k');
+    });
+  });
+
+  describe('capitalize', () => {
+    it('must return a correct result', () => {
+      expect(capitalize('test')).toEqual('Test');
+    });
+  });
+
+  describe('formatPrice', () => {
+    it('must return a correct result', () => {
+      expect(formatPrice(20)).toEqual('€20.00');
+      expect(formatPrice(20.05)).toEqual('€20.05');
+      expect(formatPrice(20.005)).toEqual('€20.00');
+      expect(formatPrice(20.999)).toEqual('€21.00');
+    });
+  });
+
+  describe('getRandomId', () => {
+    it('must return a string', () => {
+      expect(typeof getRandomId()).toEqual('string');
     });
   });
 });
