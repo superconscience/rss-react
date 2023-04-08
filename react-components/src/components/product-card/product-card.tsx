@@ -6,15 +6,15 @@ import classNames from 'classnames';
 import styles from './product-card.module.scss';
 
 export type ProductCardProps = PropsWithClassName & {
-  card: Product;
+  product: Product;
 } & Pick<HTMLAttributes<HTMLLIElement>, 'onClick'>;
 
 export type ProductCardState = {
   image: string | undefined;
 };
 
-export const ProductCard: FC<ProductCardProps> = ({ card, className, onClick }) => {
-  const { title, price, thumbnail, stock } = card;
+export const ProductCard: FC<ProductCardProps> = ({ product, className, onClick }) => {
+  const { title, price, thumbnail, stock } = product;
 
   const isAvailable = stock > 0;
 
