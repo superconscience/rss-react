@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { Mock, describe, it, vi } from 'vitest';
-import { fakeProduct } from '../../models/product';
+import { createFakeProducts } from '../../models/product';
 import { ProductList } from './product-list';
 
 const renderProductList = (count: number, onCardClick: Mock, renderSpinner: Mock) =>
@@ -23,11 +23,6 @@ const renderProductListWithError = (error: string, onCardClick: Mock, renderSpin
       renderSpinner={renderSpinner}
     />
   );
-
-const createFakeProducts = (count: number) =>
-  Array(count)
-    .fill(null)
-    .map((_, i) => ({ ...fakeProduct, id: i + 1 }));
 
 describe('ProductList', async () => {
   it('renders products', async () => {

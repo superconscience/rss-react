@@ -25,3 +25,8 @@ export const fakeProduct: Product = {
   thumbnail: '...',
   images: ['...', '...', '...'],
 };
+
+export const createFakeProducts = (count: number) =>
+  Array(count)
+    .fill(null)
+    .map((_, i) => ({ ...fakeProduct, id: i + 1 }));
