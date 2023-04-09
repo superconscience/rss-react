@@ -12,18 +12,23 @@ export type ModalProps = PropsWithChildren & {
 };
 
 export const Modal: FC<ModalProps> = ({ isOpen, toggle, classNames, children }) => {
+  const onClose = () => toggle(false);
   return (
     <>
       {isOpen && (
         <div
+          data-testid="modal"
           className={cn(styles['modal-overlay'], classNames?.overlay)}
-          onClick={() => toggle(false)}
+          onClick={onClose}
         >
           <div
             onClick={(e) => e.stopPropagation()}
             className={cn(styles['modal'], classNames?.modal)}
           >
-            {children}
+            <>
+              <button className={styles['modal-close']} onClick={onClose} />
+              {children}
+            </>
           </div>
         </div>
       )}
