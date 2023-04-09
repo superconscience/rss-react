@@ -2,8 +2,9 @@ import classNames from 'classnames';
 import { FC } from 'react';
 import { Product } from '../../models/product';
 import { PropsWithClassName } from '../../types/types';
-import styles from './product-details.module.scss';
 import { formatPrice } from '../../utils/functions';
+import { Image } from '../ui/image/image';
+import styles from './product-details.module.scss';
 
 export type ProductDetailsProps = PropsWithClassName & {
   product: Product;
@@ -25,7 +26,7 @@ export const ProductDetails: FC<ProductDetailsProps> = ({ product, className }) 
       <div className={styles['product-data']}>
         <div className={styles['product-photo']}>
           <div className={styles['grand-photo']}>
-            <img className={styles['img-big']} alt="Slide" src={images[0]} />
+            <Image className={styles['img-big']} src={images[0]} alt="Slide" />
           </div>
         </div>
         <div className={styles['product-info']}>
