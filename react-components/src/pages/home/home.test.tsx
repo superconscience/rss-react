@@ -1,17 +1,73 @@
 import '@testing-library/jest-dom';
-import { describe, it } from 'vitest';
-import { Home } from './home';
-import { render } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
+import { rest } from 'msw';
 import { BrowserRouter } from 'react-router-dom';
+import { describe, it } from 'vitest';
+import { serviceHandlers } from '../../__tests__/mock-dummy-json';
+import { BASE_URL, BaseResponse } from '../../api/dummy-json.api';
+import { createFakeProducts, fakeProduct } from '../../models/product';
+import { Home } from './home';
 
-describe('Home', async () => {
+serviceHandlers([
+  {
+    endpoint: 'products/1',
+    response: fakeProduct,
+    method: 'get',
+  },
+  rest.get(`${BASE_URL}/products/search`, (req, res, ctx) => {
+    const search = req.url.searchParams.get('q');
+    const response: BaseResponse = {
+      limit: 10,
+      products: createFakeProducts(10),
+      skip: 0,
+      total: 100,
+    };
+    if (search === 'iphone') {
+      response.products = [fakeProduct];
+    } else if (search !== '') {
+      response.products = [];
+    }
+    return res(ctx.status(200), ctx.json(response));
+  }),
+]);
+
+describe('Home', () => {
   it('renders search input and cards', async () => {
-    const { getAllByRole, getByPlaceholderText } = render(<Home />, {
-      wrapper: BrowserRouter,
-    });
+    const { unmount, container, getByPlaceholderText, getByTestId, findByPlaceholderText } =
+      await act(() =>
+        waitFor(() =>
+          render(<Home />, {
+            wrapper: BrowserRouter,
+          })
+        )
+      );
+
+    const getListItems = () => container.querySelectorAll(`li[class*=product-preview]`);
 
     expect(getByPlaceholderText(/search/i)).toBeInTheDocument();
 
-    expect(getAllByRole('listitem')).toHaveLength(15);
+    expect(getListItems()).toHaveLength(10);
+
+    await act(() => waitFor(() => fireEvent.click(getListItems()[0])));
+
+    const modal = getByTestId('modal');
+
+    expect(modal).toBeInTheDocument();
+
+    const title = modal.querySelector('h1');
+
+    if (title) {
+      expect(title).toHaveTextContent(fakeProduct.title);
+    }
+
+    const searchInput = await findByPlaceholderText(/search/i);
+    await act(() => waitFor(() => fireEvent.change(searchInput, { target: { value: 'iphone' } })));
+    await act(() =>
+      waitFor(() => fireEvent.keyUp(searchInput, { key: 'Enter', code: 13, charCode: 13 }))
+    );
+
+    expect(getListItems()).toHaveLength(1);
+
+    unmount();
   });
 });

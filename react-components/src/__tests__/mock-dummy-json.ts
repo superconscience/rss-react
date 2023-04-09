@@ -32,37 +32,47 @@ type MockConfigDelete<R = object> = {
   method: Extract<MockConfigMethod, 'delete'>;
 };
 
-type MockConfig = (MockConfigGet | MockConfigPost | MockConfigPut | MockConfigDelete)[];
+type MockConfig = (
+  | MockConfigGet
+  | MockConfigPost
+  | MockConfigPut
+  | MockConfigDelete
+  | Parameters<typeof setupServerMSW>[0]
+)[];
 
 export const setupServer = (config: MockConfig) => {
   const handlers: Parameters<typeof setupServerMSW> = [];
 
   config.forEach((configItem) => {
-    const { method } = configItem;
-    if (method === 'get') {
-      handlers.push(
-        rest.get(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
-          return res(ctx.status(200), ctx.json(configItem.response));
-        })
-      );
-    } else if (method === 'post') {
-      handlers.push(
-        rest.post(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
-          return res(ctx.status(200), ctx.json(configItem.response));
-        })
-      );
-    } else if (method === 'put') {
-      handlers.push(
-        rest.put(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
-          return res(ctx.status(200), ctx.json(configItem.response));
-        })
-      );
-    } else if (method === 'delete') {
-      handlers.push(
-        rest.delete(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
-          return res(ctx.status(200), ctx.json(configItem.response));
-        })
-      );
+    if ('method' in configItem) {
+      const { method } = configItem;
+      if (method === 'get') {
+        handlers.push(
+          rest.get(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(configItem.response));
+          })
+        );
+      } else if (method === 'post') {
+        handlers.push(
+          rest.post(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(configItem.response));
+          })
+        );
+      } else if (method === 'put') {
+        handlers.push(
+          rest.put(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(configItem.response));
+          })
+        );
+      } else if (method === 'delete') {
+        handlers.push(
+          rest.delete(`${BASE_URL}/${configItem.endpoint}`, (_req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(configItem.response));
+          })
+        );
+      }
+    } else {
+      handlers.push(configItem);
     }
   });
   handlers.push(
