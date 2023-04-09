@@ -23,7 +23,7 @@ export const fakeProduct: Product = {
   brand: 'Apple',
   category: 'smartphones',
   thumbnail: '...',
-  images: ['...', '...', '...'],
+  images: ['https://i.dummyjson.com/data/products/1/1.jpg'],
 };
 
 export const createFakeProducts = (count: number) =>

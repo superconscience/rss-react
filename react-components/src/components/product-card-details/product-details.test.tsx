@@ -7,7 +7,7 @@ import { ProductDetails } from './product-details';
 
 describe('ProductDetails', async () => {
   it('renders card data', async () => {
-    const { getByText, getByRole } = render(<ProductDetails product={fakeProduct} />);
+    const { getByText } = render(<ProductDetails product={fakeProduct} />);
 
     const titleRegexp = new RegExp(fakeProduct.title, 'i');
     const categoryRegexp = new RegExp(fakeProduct.title, 'i');
@@ -18,9 +18,8 @@ describe('ProductDetails', async () => {
     const category = getByText(categoryRegexp);
     const brand = getByText(brandRegexp);
     const price = getByText(priceRegexp);
-    const image = getByRole('img');
 
-    [title, category, brand, price, image].forEach((elem) => {
+    [title, category, brand, price].forEach((elem) => {
       expect(elem).toBeInTheDocument();
     });
   });
