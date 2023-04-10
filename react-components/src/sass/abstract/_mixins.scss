@@ -1,0 +1,86 @@
+@import 'variables';
+
+@mixin media-lg-up {
+  @media (min-width: $width-lg) {
+    @content;
+  }
+}
+
+@mixin media-lg-down {
+  @media (max-width: ($width-lg - 1px)) {
+    @content;
+  }
+}
+
+@mixin media-md-up {
+  @media (min-width: $width-md) {
+    @content;
+  }
+}
+
+@mixin media-md-down {
+  @media (max-width: ($width-md - 1px)) {
+    @content;
+  }
+}
+
+@mixin media-sm-up {
+  @media (min-width: $width-sm) {
+    @content;
+  }
+}
+
+@mixin media-sm-down {
+  @media (max-width: ($width-sm - 1px)) {
+    @content;
+  }
+}
+
+@mixin media-xs-up {
+  @media (min-width: $width-xs) {
+    @content;
+  }
+}
+
+@mixin media-xs-down {
+  @media (max-width: ($width-xs - 1px)) {
+    @content;
+  }
+}
+
+@mixin overflow-ellipsis($lines: 1) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+@mixin make-container($padding-x: $container-padding-x) {
+  width: 100%;
+  padding-right: $padding-x;
+  padding-left: $padding-x;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@mixin min($bp, $max: "null", $device: "screen") {
+  @if $max == "null" {
+    @media only #{$device} and (min-width: #{$bp}) {
+      @content;
+    }
+  } @else {
+    @media only #{$device} and (min-width: #{$bp}) and (max-width: #{$max}) {
+      @content;
+    }
+  }
+}
+
+@function bp($bp) {
+  @return map-get($breakpoints, $bp);
+}
+
+@function container($container-size, $true-val: false) {
+  @return map-get($container-sizes, $container-size);
+}
