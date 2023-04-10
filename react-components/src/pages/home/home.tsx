@@ -11,6 +11,7 @@ import useModal from '../../hooks/use-modal';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import styles from './home.module.scss';
+import { getTypedStorageItem } from '../../utils/localstorage';
 
 export const Home: FC = () => {
   const {
@@ -64,7 +65,8 @@ export const Home: FC = () => {
   );
 
   useEffect(() => {
-    search('');
+    const initialSearch = getTypedStorageItem('search');
+    search(initialSearch || '');
   }, [search]);
 
   useEffect(() => {
