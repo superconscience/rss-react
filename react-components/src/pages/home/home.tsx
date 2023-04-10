@@ -85,6 +85,7 @@ export const Home: FC = () => {
           <ProductList
             products={searchData?.products || null}
             error={searchError?.message || null}
+            status={searchStatus}
             onCardClick={onCardClick}
             renderSpinner={(searchStatus === 'pending' && renderSpinner) || (() => null)}
           />

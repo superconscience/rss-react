@@ -14,21 +14,28 @@ type TState<D = unknown, E extends Error = Error> =
   | TResolvedState<D>
   | TRejectedState<E>;
 
-type TIdleAction = { type: 'idle' };
+type TIdleAction = { type: TIdleStatus };
 
-type TPendingAction = { type: 'pending' };
+type TPendingAction = { type: TPendingStatus };
 
-type TResolvedAction<D = unknown> = { type: 'resolved'; data: D };
+type TResolvedAction<D = unknown> = { type: TResolvedStatus; data: D };
 
-type TRejectedAction<E extends Error = Error> = { type: 'rejected'; error: E };
+type TRejectedAction<E extends Error = Error> = { type: TRejectedStatus; error: E };
 
-type TIdleState = { status: 'idle'; data: null; error: null };
+type TIdleState = { status: TIdleStatus; data: null; error: null };
 
-type TPendingState<D> = { status: 'pending'; data: D | null; error: null };
+type TPendingState<D> = { status: TPendingStatus; data: D | null; error: null };
 
-type TResolvedState<D = unknown> = { status: 'resolved'; data: D; error: null };
+type TResolvedState<D = unknown> = { status: TResolvedStatus; data: D; error: null };
 
-type TRejectedState<E extends Error = Error> = { status: 'rejected'; data: null; error: E };
+type TRejectedState<E extends Error = Error> = { status: TRejectedStatus; data: null; error: E };
+
+type TIdleStatus = 'idle';
+type TPendingStatus = 'pending';
+type TResolvedStatus = 'resolved';
+type TRejectedStatus = 'rejected';
+
+export type TStatus = TIdleStatus | TPendingStatus | TResolvedStatus | TRejectedStatus;
 
 function useSafeDispatch<D = unknown, E extends Error = Error>(dispatch: TDispatch<D, E>) {
   const mounted = useRef(false);

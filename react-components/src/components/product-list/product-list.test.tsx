@@ -8,6 +8,7 @@ const renderProductList = (count: number, onCardClick: Mock, renderSpinner: Mock
   render(
     <ProductList
       products={createFakeProducts(count)}
+      status="resolved"
       error={null}
       onCardClick={onCardClick}
       renderSpinner={renderSpinner}
@@ -18,6 +19,7 @@ const renderProductListWithError = (error: string, onCardClick: Mock, renderSpin
   render(
     <ProductList
       products={null}
+      status="rejected"
       error={error}
       onCardClick={onCardClick}
       renderSpinner={renderSpinner}
