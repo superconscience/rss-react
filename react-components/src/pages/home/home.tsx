@@ -1,79 +1,44 @@
-import { FC, ReactEventHandler, useCallback, useEffect } from 'react';
-import { BaseResponse } from '../../api/dummy-json.api';
+import { FC, ReactEventHandler, useEffect } from 'react';
 import { ProductDetails } from '../../components/product-card-details/product-details';
 import { ProductList } from '../../components/product-list/product-list';
 import { Search } from '../../components/search/search';
 import { Container } from '../../components/ui/container/container';
 import { LoadingSpinner } from '../../components/ui/loading-spinner/loading-spinner';
 import { Modal } from '../../components/ui/modal/modal';
-import { useAsync } from '../../hooks/use-async';
 import useModal from '../../hooks/use-modal';
-import { Product } from '../../models/product';
-import { ProductService } from '../../services/product.service';
-import styles from './home.module.scss';
+import { isErrorWithMessage, isFetchBaseQueryError } from '../../services/helpers';
+import {
+  useLazyGetProductQuery,
+  useLazySearchProductsQuery,
+} from '../../services/product.rtk.service';
 import { getTypedStorageItem } from '../../utils/localstorage';
+import styles from './home.module.scss';
 
 export const Home: FC = () => {
-  const {
-    data: searchData,
-    run: runSearch,
-    status: searchStatus,
-    setData: setSearchData,
-    error: searchError,
-  } = useAsync<BaseResponse>();
+  const [getProduct, { data: product, isFetching: isProductFetching }] = useLazyGetProductQuery();
 
-  const {
-    data: product,
-    run: runProduct,
-    status: productStatus,
-    reset: resetProduct,
-  } = useAsync<Product>();
+  const [searchProduct, { data: products, error: productsError, isFetching: isProductsFetching }] =
+    useLazySearchProductsQuery();
 
-  const { isOpen: isModalOpen, toggle: toggleModalDefault } = useModal();
+  const { isOpen: isModalOpen, toggle: toggleModal } = useModal();
 
   const renderSpinner = () => <LoadingSpinner className={styles['spinner-container']} />;
 
-  const search = useCallback(
-    (value: string) => {
-      runSearch(ProductService.search(value));
-    },
-    [runSearch]
-  );
-
-  const onSearch = (value: string) => {
-    if (value) {
-      search(value);
-    } else {
-      setSearchData({ limit: 0, products: [], skip: 0, total: 0 });
-    }
+  const onSearch = async (value: string) => {
+    searchProduct(value, false);
   };
 
   const onCardClick =
     (id: number): ReactEventHandler =>
     async () => {
-      await runProduct(ProductService.getSingleProduct(id));
+      await getProduct(id, false);
+      toggleModal(true);
     };
-
-  const toggleModal = useCallback(
-    (toggle: boolean) => {
-      if (!toggle) {
-        resetProduct();
-      }
-      toggleModalDefault(toggle);
-    },
-    [resetProduct, toggleModalDefault]
-  );
 
   useEffect(() => {
     const initialSearch = getTypedStorageItem('search');
-    search(initialSearch || '');
-  }, [search]);
-
-  useEffect(() => {
-    if (product) {
-      toggleModal(true);
-    }
-  }, [product, toggleModal]);
+    searchProduct(initialSearch || '', false);
+  }, [searchProduct]);
 
   return (
     <>
@@ -82,14 +47,22 @@ export const Home: FC = () => {
           <Search onSearch={onSearch} />
         </div>
         <div className={styles['cards-wrapper']}>
-          <ProductList
-            products={searchData?.products || null}
-            error={searchError?.message || null}
-            status={searchStatus}
-            onCardClick={onCardClick}
-            renderSpinner={(searchStatus === 'pending' && renderSpinner) || (() => null)}
-          />
-          {productStatus === 'pending' && renderSpinner()}
+          <ProductList products={products || []} onCardClick={onCardClick} />
+          {products && products.length === 0 && <p>Sorry, no items found 😩</p>}
+          {isProductsFetching && renderSpinner()}
+          {isProductFetching && renderSpinner()}
+          {productsError && (
+            <div className="alert alert-danger">
+              <span>
+                <strong>Error!</strong>
+                {isFetchBaseQueryError(productsError)
+                  ? 'data' in productsError
+                    ? JSON.stringify(productsError.data)
+                    : productsError.error
+                  : isErrorWithMessage(productsError) && productsError.message}
+              </span>
+            </div>
+          )}
         </div>
       </Container>
       <Modal isOpen={isModalOpen} toggle={toggleModal}>
