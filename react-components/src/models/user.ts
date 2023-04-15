@@ -1,11 +1,9 @@
-import fakeImage from '../../../public/vite.svg';
-
 export type User = {
   id: string;
   email: string;
   name: string;
   lastName: string;
-  birthdate: Date;
+  birthdate: string;
   city: string;
   state: string;
   zip: number;
@@ -20,10 +18,10 @@ export const fakeUser: User = {
   name: 'Name',
   lastName: 'Lastname',
   email: 'aaa@aaa.cc',
-  birthdate: new Date(),
+  birthdate: '22.12.2022',
   city: 'City',
   state: 'State',
   gender: 'male',
   zip: 44444,
-  image: fakeImage,
+  image: '',
 };

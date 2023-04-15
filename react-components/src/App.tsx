@@ -1,7 +1,7 @@
 import { FC } from 'react';
+import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { AppContextProvider } from './context/app-context';
-import { Provider } from 'react-redux';
 import routes from './routes';
 import { store } from './store/store';
 

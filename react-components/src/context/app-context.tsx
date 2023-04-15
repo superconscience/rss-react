@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, createContext, useState } from 'react';
+import { FC, PropsWithChildren, createContext, useContext, useState } from 'react';
 import { User } from '../models/user';
 
 export type AppContextType = {
@@ -23,6 +23,14 @@ const initialState: AppContextType = {
 };
 
 export const AppContext = createContext<AppContextType>(initialState);
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error(`useAppContext must be used within an AppContextProvider`);
+  }
+  return context;
+};
 
 export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [users, setUsers] = useState<User[]>([]);

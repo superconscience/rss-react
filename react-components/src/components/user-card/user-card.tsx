@@ -24,7 +24,7 @@ export const UserCard: FC<UserCardProps> = ({
           <strong>Email :</strong> {email}
         </li>
         <li className="list-group-item">
-          <strong>Birth date :</strong> {birthdate.toLocaleDateString()}
+          <strong>Birth date :</strong> {birthdate}
         </li>
         <li className="list-group-item">
           <strong>Gender :</strong> {capitalize(gender)}

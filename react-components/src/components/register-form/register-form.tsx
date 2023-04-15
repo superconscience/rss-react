@@ -10,9 +10,9 @@ import { RadioInput } from '../ui/radio/radio';
 import { Select } from '../ui/select/select';
 import { UploadImage } from '../upload-image/upload-image';
 import { customValidation, defaultHookFormValidationMessages } from './validate';
+import { useUsers } from '../../hooks/use-users';
 
 export type RegisterFormProps = {
-  addUser: (user: User) => void;
   showAlert: () => void;
 };
 
@@ -50,13 +50,14 @@ export type RegisterFormState = {
   agree: boolean;
 };
 
-export const RegisterForm: FC<RegisterFormProps> = ({ addUser, showAlert }) => {
+export const RegisterForm: FC<RegisterFormProps> = ({ showAlert }) => {
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormState>({ reValidateMode: 'onSubmit' });
+  const [users, setUsers] = useUsers();
   const [image, setImage] = useState<string | null>();
 
   const formRef: RefObject<HTMLFormElement> = createRef<HTMLFormElement>();
@@ -65,7 +66,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({ addUser, showAlert }) => {
 
   const onSubmit: SubmitHandler<RegisterFormState> = (data) => {
     const newUser = extractUser(data);
-    addUser(newUser);
+    setUsers([...users, newUser]);
     showAlert();
     resetForm();
   };
@@ -86,7 +87,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({ addUser, showAlert }) => {
       name,
       lastName,
       email,
-      birthdate: new Date(birthdate),
+      birthdate: new Date(birthdate).toLocaleDateString(),
       state: state,
       city: city,
       zip: Number(zip) || 0,

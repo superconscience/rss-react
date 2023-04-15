@@ -8,10 +8,7 @@ import { Modal } from '../../components/ui/modal/modal';
 import useModal from '../../hooks/use-modal';
 import { useSearch } from '../../hooks/use-search';
 import { isErrorWithMessage, isFetchBaseQueryError } from '../../services/helpers';
-import {
-  useLazyGetProductQuery,
-  useLazySearchProductsQuery,
-} from '../../services/product.rtk.service';
+import { useLazyGetProductQuery, useLazySearchProductsQuery } from '../../services/product.service';
 import styles from './home.module.scss';
 
 export const Home: FC = () => {
@@ -38,7 +35,7 @@ export const Home: FC = () => {
     };
 
   useEffect(() => {
-    searchProduct(storeSearch, false);
+    searchProduct(storeSearch, true);
   }, [searchProduct, storeSearch]);
 
   return (

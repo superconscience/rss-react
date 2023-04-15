@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setSearch as setStoreSearch } from '../store/slices/productSlice';
+import { setSearch as setStoreSearch } from '../store/slices/product-slice';
 import { AppDispatch } from '../store/store';
 
 export const useSearch = (): [string, (value: string) => ReturnType<AppDispatch>] => {
