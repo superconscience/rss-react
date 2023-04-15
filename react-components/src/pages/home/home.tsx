@@ -6,15 +6,16 @@ import { Container } from '../../components/ui/container/container';
 import { LoadingSpinner } from '../../components/ui/loading-spinner/loading-spinner';
 import { Modal } from '../../components/ui/modal/modal';
 import useModal from '../../hooks/use-modal';
+import { useSearch } from '../../hooks/use-search';
 import { isErrorWithMessage, isFetchBaseQueryError } from '../../services/helpers';
 import {
   useLazyGetProductQuery,
   useLazySearchProductsQuery,
 } from '../../services/product.rtk.service';
-import { getTypedStorageItem } from '../../utils/localstorage';
 import styles from './home.module.scss';
 
 export const Home: FC = () => {
+  const [storeSearch, setStoreSearch] = useSearch();
   const [getProduct, { data: product, isFetching: isProductFetching }] = useLazyGetProductQuery();
 
   const [searchProduct, { data: products, error: productsError, isFetching: isProductsFetching }] =
@@ -25,7 +26,8 @@ export const Home: FC = () => {
   const renderSpinner = () => <LoadingSpinner className={styles['spinner-container']} />;
 
   const onSearch = async (value: string) => {
-    searchProduct(value, false);
+    await searchProduct(value, false);
+    setStoreSearch(value);
   };
 
   const onCardClick =
@@ -36,9 +38,8 @@ export const Home: FC = () => {
     };
 
   useEffect(() => {
-    const initialSearch = getTypedStorageItem('search');
-    searchProduct(initialSearch || '', false);
-  }, [searchProduct]);
+    searchProduct(storeSearch, false);
+  }, [searchProduct, storeSearch]);
 
   return (
     <>
