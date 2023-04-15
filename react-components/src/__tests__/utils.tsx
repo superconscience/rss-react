@@ -1,13 +1,25 @@
+import React, { PropsWithChildren } from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import routes from '../routes';
+import type { RenderOptions } from '@testing-library/react';
+import type { PreloadedState } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+import { AppStore, RootState, setupStore } from '../store/store';
 
-export const renderWithRouter = ({ route = '/' } = {}) => {
-  window.history.pushState({}, 'Test page', route);
+interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
+  preloadedState?: PreloadedState<RootState>;
+  store?: AppStore;
+}
 
-  return {
-    user: userEvent.setup(),
-    ...render(<RouterProvider router={createBrowserRouter(routes)} />),
-  };
-};
+export function renderWithProviders(
+  ui: React.ReactElement,
+  {
+    preloadedState = {},
+    store = setupStore(preloadedState),
+    ...renderOptions
+  }: ExtendedRenderOptions = {}
+) {
+  function Wrapper({ children }: PropsWithChildren): JSX.Element {
+    return <Provider store={store}>{children}</Provider>;
+  }
+  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+}
