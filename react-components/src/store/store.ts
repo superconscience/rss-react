@@ -1,7 +1,7 @@
-import { PreloadedState, configureStore, combineReducers } from '@reduxjs/toolkit';
+import { PreloadedState, combineReducers, configureStore } from '@reduxjs/toolkit';
+import { productApi } from '../services/product.service';
 import productsReducer from './slices/product-slice';
 import usersReducer from './slices/user-slice';
-import { productApi } from '../services/product.service';
 
 const rootReducer = combineReducers({
   products: productsReducer,
