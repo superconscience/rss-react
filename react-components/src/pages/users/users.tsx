@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 import { RegisterForm } from '../../components/register-form/register-form';
 import { UsersAlert } from '../../components/ui/alert/users-alert';
 import { Container } from '../../components/ui/container/container';
@@ -12,21 +12,28 @@ const AlertPadding = ({ children, padding }: PropsWithChildren & { padding: numb
 
 export const Users: FC = () => {
   const [users] = useUsers();
-  const { usersAlert } = useAppContext();
+  const {
+    usersAlert: { isOpen: isAlertShown, close: closeAlert },
+  } = useAppContext();
+
+  useEffect(() => {
+    return () => closeAlert();
+  }, [closeAlert]);
+
   return (
     <Container>
       <div className="row">
         <div
           className="col-12 position-relative"
-          style={{ display: usersAlert.isOpen ? undefined : 'none' }}
+          style={{ display: isAlertShown ? undefined : 'none' }}
         >
-          <UsersAlert className="position-absolute" onClose={() => usersAlert.close()} />
+          <UsersAlert className="position-absolute" onClose={() => closeAlert()} />
         </div>
-        <div className="col-12" onClick={() => usersAlert.close()}>
+        <div className="col-12" onClick={() => closeAlert()}>
           <div className="row">
             <div className="col-xl-2 col-lg-3 col-md-4">
               <AlertPadding padding={50}>
-                <RegisterForm showAlert={() => usersAlert.open()} />
+                <RegisterForm showAlert={() => {}} />
               </AlertPadding>
             </div>
             <div className="col-xl-10 col-lg-9 col-md-8">

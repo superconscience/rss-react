@@ -7,6 +7,7 @@ import { serviceHandlers } from '../../__tests__/mock-dummy-json';
 import { BASE_URL, BaseResponse } from '../../api/dummy-json.api';
 import { createFakeProducts, fakeProduct } from '../../models/product';
 import { Home } from './home';
+import { renderWithProviders } from '../../__tests__/utils';
 
 serviceHandlers([
   {
@@ -33,15 +34,23 @@ serviceHandlers([
 
 describe('Home', () => {
   it('renders search input and cards', async () => {
-    const { unmount, container, getByPlaceholderText, getByTestId, findByPlaceholderText } =
+    // const { unmount, container, getByPlaceholderText, getByTestId, findByPlaceholderText } =
+    //   await act(() =>
+    //     waitFor(() =>
+    //       render(<Home />, {
+    //         wrapper: BrowserRouter,
+    //       })
+    //     )
+    //   );
+    const { unmount, debug, container, getByPlaceholderText, getByTestId, findByPlaceholderText } =
       await act(() =>
         waitFor(() =>
-          render(<Home />, {
-            wrapper: BrowserRouter,
+          renderWithProviders(<Home />, {
+            preloadedState: { products: { search: 'ipho' } },
           })
         )
       );
-
+    debug();
     const getListItems = () => container.querySelectorAll(`li[class*=product-preview]`);
 
     expect(getByPlaceholderText(/search/i)).toBeInTheDocument();

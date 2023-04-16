@@ -7,7 +7,7 @@ import { Search } from './search';
 describe('Search', async () => {
   it('gets value from the store on render', async () => {
     const searchValue = 'test';
-    const { debug, getByRole } = await act(() =>
+    const { unmount, getByRole } = await act(() =>
       waitFor(() =>
         renderWithProviders(<Search onSearch={vi.fn()} />, {
           preloadedState: { products: { search: searchValue } },
@@ -16,6 +16,7 @@ describe('Search', async () => {
     );
 
     expect(getByRole('searchbox')).toHaveValue(searchValue);
-    debug();
+
+    unmount();
   });
 });

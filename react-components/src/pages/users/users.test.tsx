@@ -1,12 +1,21 @@
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { describe, it } from 'vitest';
+import { renderWithProviders } from '../../__tests__/utils';
+import { fakeUser } from '../../models/user';
 import { Users } from './users';
 
 describe('Users', async () => {
   it('renders contents', async () => {
-    const { getByText } = render(<Users />);
+    const { unmount, getByText } = await act(() =>
+      waitFor(() =>
+        renderWithProviders(<Users />, {
+          preloadedState: { users: { users: [fakeUser] } },
+        })
+      )
+    );
+    expect(getByText(fakeUser.email)).toBeInTheDocument();
 
-    expect(getByText(/no users registered yet/i)).toBeInTheDocument();
+    unmount();
   });
 });

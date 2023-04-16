@@ -1,6 +1,8 @@
 import cn from 'classnames';
 import { FC, ReactNode, RefObject, createRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useAppContext } from '../../context/app-context';
+import { useUsers } from '../../hooks/use-users';
 import { Gender, User } from '../../models/user';
 import { getRandomId } from '../../utils/functions';
 import { CheckboxInput } from '../ui/checkbox/checkbox';
@@ -10,7 +12,6 @@ import { RadioInput } from '../ui/radio/radio';
 import { Select } from '../ui/select/select';
 import { UploadImage } from '../upload-image/upload-image';
 import { customValidation, defaultHookFormValidationMessages } from './validate';
-import { useUsers } from '../../hooks/use-users';
 
 export type RegisterFormProps = {
   showAlert: () => void;
@@ -50,7 +51,7 @@ export type RegisterFormState = {
   agree: boolean;
 };
 
-export const RegisterForm: FC<RegisterFormProps> = ({ showAlert }) => {
+export const RegisterForm: FC<RegisterFormProps> = () => {
   const {
     register,
     reset,
@@ -59,6 +60,9 @@ export const RegisterForm: FC<RegisterFormProps> = ({ showAlert }) => {
   } = useForm<RegisterFormState>({ reValidateMode: 'onSubmit' });
   const [users, setUsers] = useUsers();
   const [image, setImage] = useState<string | null>();
+  const {
+    usersAlert: { open: showAlert },
+  } = useAppContext();
 
   const formRef: RefObject<HTMLFormElement> = createRef<HTMLFormElement>();
 

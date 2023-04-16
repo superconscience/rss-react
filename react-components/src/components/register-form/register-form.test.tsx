@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { describe, it } from 'vitest';
 import { RegisterForm } from './register-form';
 
-const component = <RegisterForm addUser={() => {}} showAlert={() => {}} />;
+const component = <RegisterForm showAlert={() => {}} />;
 
 describe('Register form', async () => {
   describe('Desc', () => {

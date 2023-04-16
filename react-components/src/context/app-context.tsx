@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, createContext, useContext, useState } from 'react';
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useState } from 'react';
 import { User } from '../models/user';
 
 export type AppContextType = {
@@ -38,12 +38,12 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const addUser = (user: User): void => {
     setUsers((prev) => [...prev, user]);
   };
-  const openUsersAlert = (): void => {
+  const openUsersAlert = useCallback(() => {
     setIsAlertOpen(true);
-  };
-  const closeUsersAlert = (): void => {
+  }, []);
+  const closeUsersAlert = useCallback(() => {
     setIsAlertOpen(false);
-  };
+  }, []);
   return (
     <AppContext.Provider
       value={{
