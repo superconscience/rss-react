@@ -1,9 +1,8 @@
 import '@testing-library/jest-dom';
 import { rest } from 'msw';
 import { setupServer as setupServerMSW } from 'msw/node';
-import 'whatwg-fetch';
+// import 'whatwg-fetch';
 import { BASE_URL } from '../api/dummy-json.api';
-
 type MockConfigMethod = 'get' | 'post' | 'put' | 'delete';
 
 type MockConfigGet<R = object> = {

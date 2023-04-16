@@ -13,10 +13,6 @@ import { Select } from '../ui/select/select';
 import { UploadImage } from '../upload-image/upload-image';
 import { customValidation, defaultHookFormValidationMessages } from './validate';
 
-export type RegisterFormProps = {
-  showAlert: () => void;
-};
-
 export type RegisterFormComponentState = {
   image: string | null;
   validated: boolean;
@@ -51,7 +47,7 @@ export type RegisterFormState = {
   agree: boolean;
 };
 
-export const RegisterForm: FC<RegisterFormProps> = () => {
+export const RegisterForm: FC = () => {
   const {
     register,
     reset,

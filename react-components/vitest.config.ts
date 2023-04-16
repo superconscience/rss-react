@@ -1,4 +1,6 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, configDefaults  } from 'vitest/config';
+
+const coverageExcluded = ['src/types/*', 'src/main.tsx', 'src/routes.tsx', 'src/components/ui/common.tsx', 'src/data/*'];
 
 export default defineConfig({
   test: {
@@ -10,6 +12,7 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       all: true,
       reportsDirectory: './tests/unit/coverage',
+      exclude: [...configDefaults.coverage.exclude, ...coverageExcluded],
     },
   },
 });

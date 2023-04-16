@@ -1,14 +1,15 @@
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { describe, it } from 'vitest';
 import { RegisterForm } from './register-form';
-
-const component = <RegisterForm showAlert={() => {}} />;
+import { renderWithProviders } from '../../__tests__/utils';
 
 describe('Register form', async () => {
   describe('Desc', () => {
     it('renders contents', async () => {
-      const { unmount, getByLabelText, getAllByRole, getByRole } = render(component);
+      const { unmount, getByRole, getAllByRole, getByLabelText } = await act(() =>
+        waitFor(() => renderWithProviders(<RegisterForm />))
+      );
       expect(getByRole('heading', { name: /add user/i })).toBeInTheDocument();
       expect(getAllByRole('textbox')).toHaveLength(5);
       expect(getByRole('combobox', { name: /state/i })).toBeInTheDocument();
