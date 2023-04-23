@@ -19,7 +19,11 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./src"
   },
-  "include": ["./src/**/*", "styled.d.ts", ".eslintrc.cjs", "vite.config.ts", "src/__tests__"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": ["./src/**/*", "styled.d.ts", ".eslintrc.cjs", "vite.config.ts", "src/__tests__", "server.ts"],
   "exclude": ["./tests/unit/coverage"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import { PropsWithChildren, forwardRef } from 'react';
-import { getRandomId } from '../../../utils/functions';
 import {
   DefaultLabelProps,
   DefaultSelectProps,
@@ -19,7 +18,7 @@ export const Select = forwardRef<
   HTMLSelectElement,
   PropsWithChildren<SelectProps> & Validatable & UncontrollableSelect
 >(({ label, name, labelProps, selectProps, children, validClassName, value }, ref) => {
-  const id = `select-${getRandomId()}`;
+  const id = `select-${label}`;
   return (
     <>
       <label {...labelProps} htmlFor={id} className={cn('form-label', labelProps?.className)}>

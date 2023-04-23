@@ -1,18 +1,26 @@
 import { FC } from 'react';
 import { Provider } from 'react-redux';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRoutes } from './AppRoutes';
 import { AppContextProvider } from './context/app-context';
-import routes from './routes';
-import { store } from './store/store';
+import { RootState, setupStore } from './store/store';
+import { PreloadedState } from '@reduxjs/toolkit';
 
-const router = createBrowserRouter(routes);
+declare global {
+  interface Window {
+    __PRELOADED_STATE__?: PreloadedState<RootState>;
+  }
+}
+
+const store = setupStore(window.__PRELOADED_STATE__);
+delete window.__PRELOADED_STATE__;
 
 const App: FC = () => (
   <Provider store={store}>
     <AppContextProvider>
-      <div className="App" data-testid="app">
-        <RouterProvider router={router} fallbackElement={<p>Loading...</p>} />
-      </div>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </AppContextProvider>
   </Provider>
 );

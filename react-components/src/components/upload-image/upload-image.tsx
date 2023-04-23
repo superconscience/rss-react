@@ -1,7 +1,7 @@
-import { ChangeEvent, forwardRef } from 'react';
-import { getRandomId, readImage } from '../../utils/functions';
-import { DefaultFileInputProps, Validatable } from '../ui/common';
 import classNames from 'classnames';
+import { ChangeEvent, forwardRef } from 'react';
+import { readImage } from '../../utils/functions';
+import { DefaultFileInputProps, Validatable } from '../ui/common';
 
 export type UploadImageProps = {
   name?: string;
@@ -11,7 +11,7 @@ export type UploadImageProps = {
 
 export const UploadImage = forwardRef<HTMLInputElement, UploadImageProps & Validatable>(
   ({ name, setImage, validClassName, inputProps }, ref) => {
-    const id = `uploadImage-${getRandomId()}`;
+    const id = `uploadImage-${name}`;
     const onImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
       if (event.target.files?.length) {
         const file = event.target.files[0];

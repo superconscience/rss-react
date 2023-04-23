@@ -1,7 +1,6 @@
-import { forwardRef } from 'react';
-import { getRandomId } from '../../../utils/functions';
-import { DefaultLabelProps, DefaultRadioProps, UncontrollableRadio, Validatable } from '../common';
 import classNames from 'classnames';
+import { forwardRef } from 'react';
+import { DefaultLabelProps, DefaultRadioProps, UncontrollableRadio, Validatable } from '../common';
 
 export type RadioInputProps = {
   inputProps?: DefaultRadioProps;
@@ -15,7 +14,7 @@ export const RadioInput = forwardRef<
   HTMLInputElement,
   RadioInputProps & Validatable & UncontrollableRadio
 >(({ label, name, value, inputProps, labelProps, validClassName, checked }, ref) => {
-  const id = `radio-${getRandomId()}`;
+  const id = `radio-${value}`;
   return (
     <>
       <input

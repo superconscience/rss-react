@@ -10,6 +10,7 @@ import { useSearch } from '../../hooks/use-search';
 import { isErrorWithMessage, isFetchBaseQueryError } from '../../services/helpers';
 import { useLazyGetProductQuery, useLazySearchProductsQuery } from '../../services/product.service';
 import styles from './home.module.scss';
+import { useAppSelector } from '../../store/hooks';
 
 export const Home: FC = () => {
   const [storeSearch, setStoreSearch] = useSearch();
@@ -17,6 +18,8 @@ export const Home: FC = () => {
 
   const [searchProduct, { data: products, error: productsError, isFetching: isProductsFetching }] =
     useLazySearchProductsQuery();
+
+  const initialProducts = useAppSelector((state) => state.products.initialProducts);
 
   const { isOpen: isModalOpen, toggle: toggleModal } = useModal();
 
@@ -35,7 +38,9 @@ export const Home: FC = () => {
     };
 
   useEffect(() => {
-    searchProduct(storeSearch, true);
+    if (storeSearch !== undefined) {
+      searchProduct(storeSearch, true);
+    }
   }, [searchProduct, storeSearch]);
 
   return (
@@ -45,7 +50,7 @@ export const Home: FC = () => {
           <Search onSearch={onSearch} />
         </div>
         <div className={styles['cards-wrapper']}>
-          <ProductList products={products || []} onCardClick={onCardClick} />
+          <ProductList products={products || initialProducts || []} onCardClick={onCardClick} />
           {products && products.length === 0 && <p>Sorry, no items found 😩</p>}
           {isProductsFetching && renderSpinner()}
           {isProductFetching && renderSpinner()}

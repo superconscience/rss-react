@@ -22,7 +22,7 @@ export const Search: FC<SearchProps> = ({ className, onSearch, ...props }) => {
 
   const inputEnterKeyupHandler: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === 'Enter') {
-      onSearch(search);
+      onSearch(search || '');
     }
   };
 
@@ -32,7 +32,7 @@ export const Search: FC<SearchProps> = ({ className, onSearch, ...props }) => {
       type="search"
       placeholder="Search"
       {...props}
-      value={search}
+      value={search || ''}
       onChange={inputChangeHandler}
       onKeyUp={inputEnterKeyupHandler}
     />

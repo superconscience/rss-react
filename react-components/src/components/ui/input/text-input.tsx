@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import { forwardRef } from 'react';
-import { getRandomId } from '../../../utils/functions';
 import {
   DefaultLabelProps,
   DefaultTextInputProps,
@@ -19,7 +18,7 @@ export const TextInput = forwardRef<
   HTMLInputElement,
   TextInputProps & Validatable & UncontrollableInput
 >(({ label, name, inputProps, labelProps, validClassName, value }, ref) => {
-  const id = `textInput-${getRandomId()}`;
+  const id = `textInput-${label}`;
   return (
     <>
       <label {...labelProps} htmlFor={id} className={cn('form-label', labelProps?.className)}>

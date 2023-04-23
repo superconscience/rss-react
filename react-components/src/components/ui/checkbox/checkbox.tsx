@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { forwardRef } from 'react';
-import { getRandomId } from '../../../utils/functions';
 import {
   DefaultCheckboxProps,
   DefaultLabelProps,
@@ -19,7 +18,7 @@ export const CheckboxInput = forwardRef<
   HTMLInputElement,
   CheckboxInputProps & Validatable & UncontrollableCheckbox
 >(({ label, name, inputProps, labelProps, validClassName, checked }, ref) => {
-  const id = `checkbox-${getRandomId()}`;
+  const id = `checkbox-${label}`;
   return (
     <>
       <input

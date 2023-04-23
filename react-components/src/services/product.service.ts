@@ -1,6 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import * as rtkQuery from '@reduxjs/toolkit/dist/query/react/index.js';
 import { BASE_URL } from '../api/dummy-json.api';
 import { Product } from '../models/product';
+import createApi from './create-api';
+
+type TypeRtkQuery = typeof rtkQuery & { default?: unknown };
+const { fetchBaseQuery } = ((rtkQuery as TypeRtkQuery).default ?? rtkQuery) as typeof rtkQuery;
 
 export const productApi = createApi({
   reducerPath: 'product',

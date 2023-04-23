@@ -1,13 +1,20 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store';
+import * as toolkitRaw from '@reduxjs/toolkit';
+import { Product } from '../../models/product';
+import { productApi } from '../../services/product.service';
+
+type TypeToolkitRaw = typeof toolkitRaw & { default?: unknown };
+const { createSlice } = ((toolkitRaw as TypeToolkitRaw).default ?? toolkitRaw) as typeof toolkitRaw;
 
 interface ProductState {
-  search: string;
+  search: string | undefined;
+  initialProducts: Product[];
 }
 
 const initialState: ProductState = {
-  search: '',
+  search: undefined,
+  initialProducts: [],
 };
 
 export const productSlice = createSlice({
@@ -17,6 +24,11 @@ export const productSlice = createSlice({
     setSearch: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(productApi.endpoints.searchProducts.matchFulfilled, (state, { payload }) => {
+      state.initialProducts = payload;
+    });
   },
 });
 
