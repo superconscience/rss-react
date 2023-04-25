@@ -1,32 +1,33 @@
 describe('Home page', () => {
+  const cardSelector = '[data-testid="product-card"]';
   beforeEach(() => {
     cy.visit('/');
   });
 
   it('should render cards', () => {
-    cy.get('[data-testid="product-card"]').should('have.length', 100);
+    cy.get(cardSelector).should('have.length.above', 1);
   });
 
-  // it('should have "Not found" text if nothing was found', () => {
-  //   cy.get('input').type('some nonexistent data{enter}');
-  //   cy.get('h1').should('include.text', 'not found');
-  // });
+  it('should display "no items found" if nothing has been found', () => {
+    cy.get('input').type('try to find me{enter}');
+    cy.contains(/no items found/i).should('be.visible');
+  });
 
-  // it('should find existent data and render clickable cards', () => {
-  //   cy.get('input').type('cats{enter}');
-  //   cy.get('[data-testid="card"]').should('have.length.above', 1);
-  //   cy.contains('My little Princess').click();
-  //   cy.contains('Uploaded').should('be.visible');
-  //   cy.contains('Tags').should('be.visible');
-  // });
+  it('should find and render clickable cards', () => {
+    cy.get('input').type('iphone{enter}');
+    cy.get(cardSelector).should('have.length.above', 1);
+    cy.contains(/iphone 9/i).click();
+    cy.contains(/An apple mobile which is nothing like apple/i).should('be.visible');
+  });
 
-  // it('should save input and cards state between pages', () => {
-  //   const query = 'some nonexistent data';
+  it('should preserve search input value and found cards when leaving page', () => {
+    const search = 'macbook';
 
-  //   cy.get('input').type(`${query}{enter}`);
-  //   cy.get('[data-testid="header-link-about"]').click();
-  //   cy.get('[data-testid="header-link-home"]').click();
-  //   cy.get('h1').should('include.text', 'not found');
-  //   cy.get('input').should('have.value', query);
-  // });
+    cy.debug();
+    cy.get('input').type(`${search}{enter}`);
+    cy.contains('a', /about us/i).click();
+    cy.contains('a', /home/i).click();
+    cy.get(cardSelector).should('have.length', 1);
+    cy.get('input').should('have.value', search);
+  });
 });

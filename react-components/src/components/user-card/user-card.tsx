@@ -10,7 +10,7 @@ export const UserCard: FC<UserCardProps> = ({
   user: { name, lastName, email, birthdate, state, city, gender, image, zip },
 }) => {
   return (
-    <div className="card">
+    <div className="card" data-testid="user-card">
       <img src={image} className="card-img-top" alt={name} style={{ maxHeight: 300 }} />
       <div className="card-body">
         <h3 className="card-title">
