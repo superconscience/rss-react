@@ -52,7 +52,6 @@ export async function createServer(
     } catch (e) {
       const err = e as Error;
       !isProd && vite.ssrFixStacktrace(err);
-      console.log(err.stack);
       res.status(500).end(err.stack);
     }
   });

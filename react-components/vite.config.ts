@@ -10,10 +10,15 @@ export default defineConfig({
     istanbul({
       cypress: true,
       requireEnv: false,
-    })
+    }),
   ],
   build: {
     outDir: './dist',
-    sourcemap: 'hidden'
+    sourcemap: 'hidden',
+  },
+  server: {
+    watch: {
+      ignored: ['**/coverage/**'],
+    },
   },
 });
