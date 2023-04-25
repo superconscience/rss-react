@@ -35,7 +35,9 @@ describe('Home', () => {
   it('renders search input and cards', async () => {
     const { unmount, container, getByPlaceholderText, getByTestId, findByPlaceholderText } =
       await waitFor(() =>
-        renderWithProviders(<Home />, { preloadedState: { products: { search: '' } } })
+        renderWithProviders(<Home />, {
+          preloadedState: { products: { search: '', initialProducts: [] } },
+        })
       );
 
     const getListItems = () => container.querySelectorAll(`li[class*=product-preview]`);

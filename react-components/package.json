@@ -7,14 +7,13 @@
     "dev": "nodemon src/server/server.ts",
     "start:server": "ts-node src/server/server.ts",
     "test:unit": "vitest run --coverage",
-    "test:e2e": "start-server-and-test start:server http://localhost:5173 test:cypress && npx nyc report --reporter=text-summary",
+    "test:e2e": "set \"NODE_TEST=e2e\" && start-server-and-test start:server http://localhost:5173 test:cypress && npx nyc report --reporter=text-summary",
     "test:cypress": "cypress run --e2e",
     "preview": "vite preview",
     "format": "prettier --write .",
     "check-types": "tsc --noEmit",
     "eslint": "eslint . --ext .tsx --ext .ts",
-    "lint": "npm run check-types && npm run eslint",
-    "make:redirects": "echo /* /index.html 200 > dist/_redirects"
+    "lint": "npm run check-types && npm run eslint"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
@@ -22,6 +21,7 @@
     "express": "^4.18.2",
     "moment": "^2.29.4",
     "nodemon": "^2.0.22",
+    "open": "^9.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",

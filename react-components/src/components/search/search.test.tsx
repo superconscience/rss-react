@@ -10,7 +10,7 @@ describe('Search', async () => {
     const { unmount, getByRole } = await act(() =>
       waitFor(() =>
         renderWithProviders(<Search onSearch={vi.fn()} />, {
-          preloadedState: { products: { search: searchValue } },
+          preloadedState: { products: { search: searchValue, initialProducts: [] } },
         })
       )
     );

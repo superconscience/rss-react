@@ -17,6 +17,7 @@ export default defineConfig({
     sourcemap: 'hidden',
   },
   server: {
+    open: true,
     watch: {
       ignored: ['**/coverage/**'],
     },

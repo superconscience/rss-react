@@ -1,11 +1,13 @@
 import path from 'path';
+import open, { apps } from 'open';
 import { fileURLToPath } from 'url';
 
 import express from 'express';
 import { ViteDevServer } from 'vite';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const isTest = process.env.VITEST;
+const isVitest = process.env.VITEST;
+const isE2E = process.env.NODE_TEST === 'e2e';
 
 const PORT = 5173;
 
@@ -27,7 +29,7 @@ export async function createServer(
       await import('vite')
     ).createServer({
       root,
-      logLevel: isTest ? 'error' : 'info',
+      logLevel: isVitest ? 'error' : 'info',
       server: {
         middlewareMode: true,
         watch: {
@@ -59,11 +61,20 @@ export async function createServer(
   return { app };
 }
 
-if (!isTest) {
+if (!isVitest) {
   createServer()
     .then(({ app }) =>
       app.listen(PORT, () => {
-        console.log(`http://localhost:${PORT}`);
+        if (!isE2E) {
+          const url = `http://localhost:${PORT}`;
+          console.log('Started server.');
+          console.log(`Available on ${url}`);
+          open(url, {
+            app: {
+              name: apps.chrome,
+            },
+          });
+        }
       })
     )
     .catch((e) => console.error(e));
