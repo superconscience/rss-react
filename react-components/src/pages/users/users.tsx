@@ -21,40 +21,42 @@ export const Users: FC = () => {
   }, [closeAlert]);
 
   return (
-    <Container>
-      <div className="row">
-        <div
-          className="col-12 position-relative"
-          style={{ display: isAlertShown ? undefined : 'none' }}
-        >
-          <UsersAlert className="position-absolute" onClose={() => closeAlert()} />
-        </div>
-        <div className="col-12" onClick={() => closeAlert()}>
-          <div className="row">
-            <div className="col-xl-2 col-lg-3 col-md-4">
-              <AlertPadding padding={50}>
-                <RegisterForm />
-              </AlertPadding>
-            </div>
-            <div className="col-xl-10 col-lg-9 col-md-8">
-              <AlertPadding padding={50}>
-                {users.length > 0 && (
-                  <div className="col-xl-10 col-lg-9 col-md-8">
-                    <div className="row g-3">
-                      {users.map((user) => (
-                        <div key={user.id} className="col-xs-3 col-lg-4 col-md-6 col-sm-6 ">
-                          <UserCard user={user} />
-                        </div>
-                      ))}
+    <div data-testid="users-page">
+      <Container>
+        <div className="row">
+          <div
+            className="col-12 position-relative"
+            style={{ display: isAlertShown ? undefined : 'none' }}
+          >
+            <UsersAlert className="position-absolute" onClose={() => closeAlert()} />
+          </div>
+          <div className="col-12" onClick={() => closeAlert()}>
+            <div className="row">
+              <div className="col-xl-2 col-lg-3 col-md-4">
+                <AlertPadding padding={50}>
+                  <RegisterForm />
+                </AlertPadding>
+              </div>
+              <div className="col-xl-10 col-lg-9 col-md-8">
+                <AlertPadding padding={50}>
+                  {users.length > 0 && (
+                    <div className="col-xl-10 col-lg-9 col-md-8">
+                      <div className="row g-3">
+                        {users.map((user) => (
+                          <div key={user.id} className="col-xs-3 col-lg-4 col-md-6 col-sm-6 ">
+                            <UserCard user={user} />
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {users.length === 0 && <h2>No Users registered yet</h2>}
-              </AlertPadding>
+                  )}
+                  {users.length === 0 && <h2>No Users registered yet</h2>}
+                </AlertPadding>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 };

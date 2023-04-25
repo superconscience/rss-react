@@ -44,7 +44,7 @@ export const Home: FC = () => {
   }, [searchProduct, storeSearch]);
 
   return (
-    <>
+    <div data-testid="home-page">
       <Container>
         <div className={styles['search-wrapper']}>
           <Search onSearch={onSearch} />
@@ -71,6 +71,6 @@ export const Home: FC = () => {
       <Modal isOpen={isModalOpen} toggle={toggleModal}>
         {product && <ProductDetails product={product} />}
       </Modal>
-    </>
+    </div>
   );
 };

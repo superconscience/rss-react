@@ -27,7 +27,11 @@ export const ProductCard: FC<ProductCardProps> = ({ product, className, onClick 
   const isAvailable = stock > 0;
 
   return (
-    <li className={classNames(styles['product-preview'], className)} onClick={onClick}>
+    <li
+      className={classNames(styles['product-preview'], className)}
+      onClick={onClick}
+      data-testid="product-card"
+    >
       <div className={styles['product-item']}>
         <div className={styles['product-item__wrapper']} style={thumbnailStyle}>
           <div className={styles['product-item__text']}>

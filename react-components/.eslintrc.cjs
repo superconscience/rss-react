@@ -20,7 +20,7 @@ module.exports = {
     },
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: ['./tsconfig.json', './cypress/tsconfig.json'],
     extraFileExtensions: ['.html'],
   },
   plugins: ['@typescript-eslint', 'react', 'prettier', 'react-hooks'],
@@ -48,4 +48,10 @@ module.exports = {
       version: 'detect',
     },
   },
+  overrides: [
+    {
+      files: ['cypress.config.ts', 'cypress/**/*.ts'],
+      extends: ['plugin:cypress/recommended'],
+    },
+  ],
 };
