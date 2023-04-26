@@ -1,5 +1,4 @@
 import path from 'path';
-import open, { apps } from 'open';
 import { fileURLToPath } from 'url';
 
 import express from 'express';
@@ -7,7 +6,6 @@ import { ViteDevServer } from 'vite';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const isVitest = process.env.VITEST;
-const isE2E = process.env.NODE_TEST === 'e2e';
 
 const PORT = 5173;
 
@@ -65,16 +63,9 @@ if (!isVitest) {
   createServer()
     .then(({ app }) =>
       app.listen(PORT, () => {
-        if (!isE2E) {
-          const url = `http://localhost:${PORT}`;
-          console.log('Started server.');
-          console.log(`Available on ${url}`);
-          open(url, {
-            app: {
-              name: apps.chrome,
-            },
-          });
-        }
+        const url = `http://localhost:${PORT}`;
+        console.log('Started server.');
+        console.log(`Available on ${url}`);
       })
     )
     .catch((e) => console.error(e));

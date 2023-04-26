@@ -7,7 +7,7 @@
     "dev": "nodemon src/server/server.ts",
     "start:server": "ts-node src/server/server.ts",
     "test:unit": "vitest run --coverage",
-    "test:e2e": "set \"NODE_TEST=e2e\" && start-server-and-test start:server http://localhost:5173 test:cypress && npx nyc report --reporter=text-summary",
+    "test:e2e": "start-server-and-test start:server http://localhost:5173 test:cypress && npx nyc report --reporter=text-summary",
     "test:cypress": "cypress run --e2e",
     "preview": "vite preview",
     "format": "prettier --write .",
