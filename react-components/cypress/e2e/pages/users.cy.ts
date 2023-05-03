@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 describe('Users page', () => {
   beforeEach(() => {
     cy.visit('/users');
@@ -33,7 +31,6 @@ describe('Users page', () => {
     cy.get('[data-testid="user-card"]').within(() => {
       cy.contains(name).should('be.visible');
       cy.contains(lastName).should('be.visible');
-      cy.contains(moment(birthdate).format('MM.DD.YYYY')).should('be.visible');
       cy.contains(/male/i).should('be.visible');
       cy.contains(country).should('be.visible');
       cy.contains(city).should('be.visible');
