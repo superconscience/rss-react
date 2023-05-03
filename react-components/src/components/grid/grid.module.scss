@@ -1,0 +1,21 @@
+@import '../../sass/abstract/mixins';
+
+.grid {
+  display: grid;
+  grid-gap: 1.5em;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  @include media-lg-down {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include media-md-down {
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1em;
+  }
+
+  @include media-sm-down {
+    grid-template-columns: 1fr;
+    grid-gap: 1em;
+  }
+}
